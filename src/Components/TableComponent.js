@@ -1,8 +1,9 @@
 import DataTable from "react-data-table-component-with-filter";
 import {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
 
 
-import {userService} from "../Services/user.service";
+
 
 const TableComponent = () => {
 
@@ -34,7 +35,7 @@ const TableComponent = () => {
     ];
 
     useEffect(() => {
-        userService.getAll().then(({data}) => setUsers(data))
+     //   userService.getAll().then(({data}) => setUsers(data))
     }, [])
 
     function handleFilter(data) {

@@ -1,4 +1,4 @@
-const baseURL = 'localhost:6060/api';
+const baseURL = 'http://localhost:6060/api';
 
 const urls = {
     signUpIn:
