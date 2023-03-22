@@ -1,14 +1,14 @@
 import DataTable from "react-data-table-component-with-filter";
 import {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {paidActions} from "../redux/slices/paid.slice";
 
 
 
 
 const TableComponent = () => {
 
-    let [users, setUsers] = useState([]);
-    let [windowLocation, setWindowLocation] = useState('')
+
 
     const ExpandedComponent = ({data}) => <pre>{JSON.stringify(data, null, 2)}</pre>;
 
@@ -34,37 +34,29 @@ const TableComponent = () => {
         }
     ];
 
+
+    const {paidArr} = useSelector(state => state.paidReducer);
+    let dispatch = useDispatch()
+
+
+
+
     useEffect(() => {
-     //   userService.getAll().then(({data}) => setUsers(data))
+    dispatch(paidActions.getAllPaid())
     }, [])
-
-    function handleFilter(data) {
-
-        const paramsObj = { name: data.Name?.value, username: data.Username?.value };
-        const searchParams = new URLSearchParams(paramsObj);
-
-        let url = searchParams.toString()
-
-        setWindowLocation(url)
-    }
-    function changeWindowLocation() {
-        window.location.href = windowLocation
-    }
 
     return (
         <div>
             <h1>Final project</h1>
-            <button disabled={!windowLocation} onClick={changeWindowLocation}>Change window location</button>
             <DataTable
                 pagination={true}
                 paginationRowsPerPageOptions={[2, 4, 6, 8, 10]}
                 paginationPerPage={2}
                 columns={columns}
                 responsive={true}
-                data={users}
+                data={paidArr.content}
                 expandableRows
                 expandableRowsComponent={ExpandedComponent}
-                onFilter={handleFilter}
             />
         </div>
     )

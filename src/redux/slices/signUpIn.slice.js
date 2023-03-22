@@ -3,9 +3,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     signInData: {},
-    signInInputData:{},
-    signUpData: {},
-    signUpInputData:{}
+    signUpData: {}
 }
 
 const signIn = createAsyncThunk('signInUpSlice/signIn',
@@ -48,6 +46,15 @@ const signUpInSlice = createSlice({
             .addCase(signIn.fulfilled, (state, action) => {
                 state.signInData = action.payload
                 console.log(state.signInData)
+
+                if (state.signInData.access_token){
+                    let date1 = new Date();
+                    let date2= new Date(date1.getTime() + 30*60000);;
+                    let expires = "; expires="+date2.toString();
+                    document.cookie ="token="+state.signInData.access_token+expires;
+                    window.location = '/tables'
+                }
+
             })
             .addCase(signUp.fulfilled, (state, action) => {
                 state.signUpData = action.payload

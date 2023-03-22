@@ -1,9 +1,10 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 
 import {signUpInReducer} from "./slices/signUpIn.slice";
+import {paidReducer} from "./slices/paid.slice";
 
 const rootReducer = combineReducers({
-    signUpInReducer
+    signUpInReducer, paidReducer
 });
 
 const setupStore = () => configureStore({reducer: rootReducer});
