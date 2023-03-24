@@ -3,15 +3,17 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 
 const initialState = {
-    paidArr: []
+    paidArr: [],
+    firstPage: 1,
+    currentPage:1
 }
 
 const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
 
-    async (token, {rejectWithValue}) => {
+    async (page, {rejectWithValue}) => {
 
         try {
-            const {data} = await paidService.getAllPaid(token)
+            const {data} = await paidService.getAllPaid(page)
             console.log(data)
             return data;
 
@@ -19,7 +21,6 @@ const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
             e.rejectWithValue(e.response.data)
         }
     })
-
 
 const paidSlice = createSlice({
 
@@ -30,7 +31,8 @@ const paidSlice = createSlice({
         builder
             .addCase(getAllPaid.fulfilled, (state, action) => {
                 state.paidArr = action.payload
-                console.log(state.paidArr)
+                state.currentPage =action.payload.number
+                console.log(state.currentPage)
             })
 
 });
@@ -38,11 +40,11 @@ const paidSlice = createSlice({
 const {reducer: paidReducer} = paidSlice;
 
 const paidActions = {
-   getAllPaid
+    getAllPaid
 }
 
 
 export {
-   paidActions,
+    paidActions,
     paidReducer
 }

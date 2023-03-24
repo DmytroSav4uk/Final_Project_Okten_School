@@ -7,7 +7,8 @@ function getCookie(name) {
     let cookieArr = document.cookie.split(";");
     for(let i = 0; i < cookieArr.length; i++) {
         let cookiePair = cookieArr[i].split("=");
-        if(name == cookiePair[0].trim()) {
+        // eslint-disable-next-line eqeqeq
+        if(name === cookiePair[0].trim()) {
             return decodeURIComponent(cookiePair[1]);
         }
     }
@@ -17,7 +18,7 @@ function getCookie(name) {
 
 
 const paidService = {
-    getAllPaid:()=>axiosService.get(urls.paid.getAllPaid, {
+    getAllPaid:(query)=>axiosService.get(urls.paid.getAllPaid + query, {
 
         headers: {
             'Authorization': `Bearer ${getCookie('token')}`

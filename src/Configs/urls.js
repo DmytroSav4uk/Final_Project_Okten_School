@@ -13,7 +13,7 @@ const urls = {
         },
 
     paid: {
-        getAllPaid: '/paid?page=1&courseFormat=online',
+        getAllPaid: '/paid?page=',
         createGroup: '/group?name='
     },
 
