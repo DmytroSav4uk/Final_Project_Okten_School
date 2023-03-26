@@ -1,4 +1,3 @@
-
 import {Navigate, Route, Routes} from "react-router-dom";
 
 import {LoginComponent} from "./Components/LoginRegister/LoginComponent";
@@ -10,7 +9,6 @@ function App() {
 
     return (
         <div>
-
             <Routes>
                 <Route path={'/getStarted'} element={<ChooserComponent/>}/>
                 <Route path={'/login'} element={<LoginComponent/>}/>
@@ -18,10 +16,6 @@ function App() {
                 <Route path={'/tables'} element={<TableComponent/>}/>
                 <Route path="" element={<Navigate to="/getStarted" />} />
             </Routes>
-
-
-
-
         </div>
     );
 }

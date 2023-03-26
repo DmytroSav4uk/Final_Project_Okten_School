@@ -1,8 +1,6 @@
 import {axiosService} from "./axios.service";
 import {urls} from "../Configs/urls";
 
-
-
 function getCookie(name) {
     let cookieArr = document.cookie.split(";");
     for(let i = 0; i < cookieArr.length; i++) {
@@ -15,15 +13,17 @@ function getCookie(name) {
     return null;
 }
 
-
-
 const paidService = {
     getAllPaid:(query)=>axiosService.get(urls.paid.getAllPaid + query, {
-
         headers: {
             'Authorization': `Bearer ${getCookie('token')}`
         }
+    }),
 
+    getFilteredPaid:(query)=>axiosService.get(urls.paid.getAllPaid + query, {
+        headers: {
+            'Authorization': `Bearer ${getCookie('token')}`
+        }
     }),
 };
 

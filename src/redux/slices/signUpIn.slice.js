@@ -54,7 +54,6 @@ const signUpInSlice = createSlice({
                     document.cookie ="token="+state.signInData.access_token+expires;
                     window.location = '/tables'
                 }
-
             })
             .addCase(signUp.fulfilled, (state, action) => {
                 state.signUpData = action.payload

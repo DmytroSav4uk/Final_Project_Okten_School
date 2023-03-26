@@ -5,7 +5,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 const initialState = {
     paidArr: [],
     firstPage: 1,
-    currentPage:1
+    currentPage: 1
 }
 
 const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
@@ -31,10 +31,8 @@ const paidSlice = createSlice({
         builder
             .addCase(getAllPaid.fulfilled, (state, action) => {
                 state.paidArr = action.payload
-                state.currentPage =action.payload.number
-                console.log(state.currentPage)
+                state.currentPage = action.payload.number + 1
             })
-
 });
 
 const {reducer: paidReducer} = paidSlice;

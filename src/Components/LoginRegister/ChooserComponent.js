@@ -1,26 +1,32 @@
+import css from "../../css/chooser.module.css"
+
+
 const ChooserComponent = () => {
 
-    const goToLogin =()=> {
+    function goToLogin() {
         window.location = '/login'
     }
 
-    const goToRegister=()=> {
+    function goToRegister(){
         window.location = '/register'
     }
 
     return (
-        <div>
-            <h1>Welcome</h1>
-            <div>
-                <div onClick={goToLogin}>
-                    <p>Login</p>
-                </div>
+        <div className={css.wrap}>
+            <div className={css.menu}>
+                <h1>Welcome</h1>
+                <div className={css.buttons}>
+                    <div className={css.button} onClick={goToLogin}>
+                        <p>Login</p>
+                    </div>
 
-                <div onClick={goToRegister}>
-                    <p>Register</p>
+                    <div className={css.button} onClick={goToRegister}>
+                        <p>Register</p>
+                    </div>
                 </div>
             </div>
         </div>
+
     )
 }
 

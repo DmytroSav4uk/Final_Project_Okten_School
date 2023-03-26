@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {signUpInActions} from "../../redux/slices/signUpIn.slice";
-
+import css from "../../css/loginRegister.module.css"
 
 const RegisterComponent = () => {
 
@@ -10,7 +10,7 @@ const RegisterComponent = () => {
     })
 
     const dispatch = useDispatch();
-    const submit = async (data) => {
+    function submit (data){
         dispatch(signUpInActions.signUp(data));
         reset();
     }

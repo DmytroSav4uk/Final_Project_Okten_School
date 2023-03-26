@@ -13,5 +13,4 @@ const store = setupStore();
 export {
     store,
     setupStore
-
 }
