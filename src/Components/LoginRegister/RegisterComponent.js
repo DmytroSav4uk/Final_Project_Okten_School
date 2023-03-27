@@ -17,12 +17,14 @@ const RegisterComponent = () => {
 
     return (
 
-        <div>
-            <form onSubmit={handleSubmit(submit)}>
-                <input placeholder={'enter email'} {...register('email')}/>
-                <input placeholder={'enter password'} {...register('password')}/>
-                <button type={"submit"}>Submit</button>
-            </form>
+        <div className={css.wrap}>
+            <div className={css.menu}>
+                <form className={css.form} onSubmit={handleSubmit(submit)}>
+                    <input placeholder={'enter email'} {...register('email')}/>
+                    <input type={"password"} placeholder={'enter password'} {...register('password')}/>
+                    <button type={"submit"}>Submit</button>
+                </form>
+            </div>
         </div>
     )
 

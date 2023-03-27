@@ -1,0 +1,79 @@
+.header {
+    background: #a2a200;
+    margin-bottom: 10px;
+}
+
+.buttonGoBack {
+    background: #6e6e00;
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.buttonGoBack h1 {
+    position: relative;
+    top: -3px;
+}
+
+.paginator {
+    background: #6e6e00;
+    display: flex;
+    justify-content: right;
+    padding-top: 10px;
+    padding-right: 100px;
+    padding-bottom: 10px;
+    gap: 10px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    height: 65px;
+}
+
+
+.button {
+    font-size: 17px;
+    width: 100px;
+    border: none;
+    height: 65px;
+    background: black;
+    color: white;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button:active {
+    background: #a2a200;
+}
+
+.paragraphs {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    max-height: 65px;
+}
+
+.paragraphs p {
+    margin: 5px;
+}
+
+.form{
+    display: flex;
+    margin-left: 60px;
+    gap: 70px;
+}
+
+.form select{
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 40px;
+}

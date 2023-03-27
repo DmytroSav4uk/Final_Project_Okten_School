@@ -1,9 +1,10 @@
 import DataTable from "react-data-table-component-with-filter";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {paidActions} from "../redux/slices/paid.slice";
 import {useForm} from "react-hook-form";
 
+import {paidActions} from "../redux/slices/paid.slice";
+import css from "../css/table.module.css";
 
 const TableComponent = () => {
 
@@ -140,16 +141,20 @@ const TableComponent = () => {
         }
     }
 
+    function goToGetStarted() {
+        window.location.href = '/GetStarted';
+    }
+
 
     return (
         <div>
-            <div>
-                <></>
-
+            <div className={css.header}>
+                <div onClick={goToGetStarted} className={css.buttonGoBack}>
+                    <h1> &lt; </h1>
+                </div>
             </div>
             <div>
-                <form onChange={handleSubmit(submit)}
-                      style={{display: "flex", gap: "60px", marginLeft: "60px"}}>
+                <form className={css.form} onChange={handleSubmit(submit)}>
                     <input placeholder={'Name'} {...register('name')}/>
                     <input placeholder={'Surname'} {...register('surname')}/>
                     <input placeholder={'Phone'}  {...register('phone')}/>
@@ -169,7 +174,7 @@ const TableComponent = () => {
                         <option value="online">Online</option>
                     </select>
 
-                    <select id="CourseType" name="CourseType">
+                    <select id="CourseType" name="CourseType" {...register('CourseType')}>
                         <option value=""></option>
                         <option value="minimal">Minimal</option>
                         <option value="pro">Pro</option>
@@ -190,11 +195,21 @@ const TableComponent = () => {
                     expandableRowsComponent={ExpandedComponent}
                 />
             </div>
-            <div style={{display: "flex"}}>
-                <button disabled={currentPage === 1} onClick={getPreviousPage}>Previous</button>
-                <p>{currentPage}</p>
-                <button disabled={currentPage === paidArr.totalPages} onClick={getNextPage}>Next</button>
+
+            <div className={css.paginator}>
+                <div className={css.buttons}>
+                    <button className={css.button} disabled={currentPage === 1} onClick={getPreviousPage}>Previous</button>
+                    <button className={css.button} disabled={currentPage === paidArr.totalPages}
+                            onClick={getNextPage}>Next
+                    </button>
+                </div>
+                <div className={css.paragraphs}>
+                    <p>current page: {currentPage}</p>
+                    <p>total pages: {paidArr.totalPages}</p>
+                </div>
             </div>
+
+
         </div>
     )
 }
