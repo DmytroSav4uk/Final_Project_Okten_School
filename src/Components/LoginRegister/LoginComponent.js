@@ -24,24 +24,15 @@ const LoginComponent = () => {
         reset()
     };
 
-
     useEffect(()=>{
-
         if (redirect) {
             navigate('/tables?page=1')
         }
-
-
     },[redirect,navigate])
-
-
-
-
 
     return (
         <div className={css.wrap}>
             <div className={css.menu}>
-
                 <form className={css.form} onSubmit={handleSubmit(submit)}>
                     <input placeholder={'enter email'} {...register('email')}/>
                     <input type={"password"} placeholder={'enter password'} {...register('password')}/>
