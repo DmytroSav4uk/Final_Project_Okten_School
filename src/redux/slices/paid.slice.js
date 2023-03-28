@@ -14,7 +14,6 @@ const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
 
         try {
             const {data} = await paidService.getAllPaid(page)
-            console.log(data)
             return data;
 
         } catch (e) {
@@ -33,6 +32,7 @@ const paidSlice = createSlice({
                 state.paidArr = action.payload
                 state.currentPage = action.payload.number + 1
             })
+
 });
 
 const {reducer: paidReducer} = paidSlice;

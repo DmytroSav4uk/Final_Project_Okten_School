@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 
 import {paidActions} from "../redux/slices/paid.slice";
 import css from "../css/table.module.css";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const TableComponent = () => {
 
@@ -59,61 +60,80 @@ const TableComponent = () => {
         }
     ];
 
-    let {paidArr} = useSelector(state => state.paidReducer);
-    let {firstPage} = useSelector(state => state.paidReducer);
+    const {paidArr} = useSelector(state => state.paidReducer);
+    const {firstPage} = useSelector(state => state.paidReducer);
+
     let {currentPage} = useSelector(state => state.paidReducer);
 
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
+    let [use, setUse] = useState(true)
 
-    let dispatch = useDispatch();
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const searchParams = new URLSearchParams();
 
+    const search = useLocation().search;
+
     useEffect(() => {
+        dispatch(paidActions.getAllPaid(search))
 
-        if (window.location == 'http://localhost:3000/tables') {
-            dispatch(paidActions.getAllPaid(firstPage));
-        } else {
-
-
-            const urlSearchParams = new URLSearchParams(window.location.search);
-            const params = Object.fromEntries(urlSearchParams.entries());
-
-            for (const key in params) {
-                if (params.hasOwnProperty(key)) {
-                    if (params[key] !== "") {
-                        searchParams.append(`${key}`, `${params[key]}`);
-                    }
-                }
-            }
-            let query = searchParams.toString();
-
+        if (use && search.length > 8) {
             setPaginateForFilteredData(true);
-            setFilter(query);
 
-            dispatch(paidActions.getAllPaid(firstPage + "&" + query));
+            let mySubString = search.substring(
+                search.indexOf("&"),
+                search.lastIndexOf("")
+            );
+
+
+            setFilter(mySubString)
+            setUse(false)
         }
 
-    }, [dispatch, firstPage, window.location])
+    }, [dispatch, firstPage, search, use])
+
+
+    const getFirstPage = () => {
+
+        if (filter) {
+            navigate("/tables?page=" + firstPage + "&" + filter)
+        }
+
+        if (filter && use === false) {
+            navigate("/tables?page=" + firstPage + filter)
+        } else {
+            navigate("/tables?page=" + firstPage)
+        }
+
+
+    };
 
     function getNextPage() {
         if (paginateForFilteredData !== true) {
             currentPage++
-            dispatch(paidActions.getAllPaid(currentPage))
+            navigate("/tables?page=" + currentPage)
+        } else if (use === false) {
+            currentPage++
+            navigate("/tables?page=" + currentPage + filter)
         } else {
             currentPage++
-            dispatch(paidActions.getAllPaid(currentPage + "&" + filter))
+            navigate("/tables?page=" + currentPage + "&" + filter)
         }
     }
 
     function getPreviousPage() {
         if (paginateForFilteredData !== true) {
             currentPage--
-            dispatch(paidActions.getAllPaid(currentPage))
+            navigate("/tables?page=" + currentPage)
+        } else if (use === false) {
+            currentPage--
+            navigate("/tables?page=" + currentPage + filter)
         } else {
             currentPage--
-            dispatch(paidActions.getAllPaid(currentPage + "&" + filter))
+            navigate("/tables?page=" + currentPage + "&" + filter)
         }
     }
 
@@ -132,17 +152,12 @@ const TableComponent = () => {
         let query = searchParams.toString()
         setFilter(query);
 
-        window.history.pushState("", query, "/tables?" + query);
-        console.log(window.location)
-        dispatch(paidActions.getAllPaid(firstPage + "&" + query))
-
-        if (window.location == 'http://localhost:3000/tables?') {
-            window.history.pushState("", '', "/tables");
-        }
+        window.history.pushState("", query, '/tables?page=1&' + query);
+        dispatch(paidActions.getAllPaid('?page=1&' + query))
     }
 
     function goToGetStarted() {
-        window.location.href = '/GetStarted';
+        navigate('/GetStarted');
     }
 
 
@@ -198,9 +213,10 @@ const TableComponent = () => {
 
             <div className={css.paginator}>
                 <div className={css.buttons}>
-                    <button className={css.button} disabled={currentPage === 1} onClick={getPreviousPage}>Previous</button>
-                    <button className={css.button} disabled={currentPage === paidArr.totalPages}
-                            onClick={getNextPage}>Next
+                    <button className={css.button} disabled={currentPage === 1} onClick={getPreviousPage}>Previous
+                    </button>
+                    <button className={css.button}
+                            onClick={currentPage === paidArr.totalPages ? getFirstPage : getNextPage}>Next
                     </button>
                 </div>
                 <div className={css.paragraphs}>

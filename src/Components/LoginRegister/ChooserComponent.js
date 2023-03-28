@@ -1,14 +1,13 @@
 import css from "../../css/chooser.module.css"
 
+import {useNavigate} from "react-router-dom";
 
 const ChooserComponent = () => {
 
-    function goToLogin() {
-        window.location = '/login'
-    }
+    const navigate = useNavigate();
 
-    function goToRegister(){
-        window.location = '/register'
+    const goToLogin = () => {
+        navigate('/login')
     }
 
     return (
@@ -19,14 +18,9 @@ const ChooserComponent = () => {
                     <div className={css.button} onClick={goToLogin}>
                         <p>Login</p>
                     </div>
-
-                    <div className={css.button} onClick={goToRegister}>
-                        <p>Register</p>
-                    </div>
                 </div>
             </div>
         </div>
-
     )
 }
 

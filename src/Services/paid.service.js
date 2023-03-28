@@ -15,16 +15,13 @@ function getCookie(name) {
 
 const paidService = {
     getAllPaid:(query)=>axiosService.get(urls.paid.getAllPaid + query, {
-        headers: {
-            'Authorization': `Bearer ${getCookie('token')}`
-        }
-    }),
 
-    getFilteredPaid:(query)=>axiosService.get(urls.paid.getAllPaid + query, {
         headers: {
             'Authorization': `Bearer ${getCookie('token')}`
         }
     }),
 };
+
+
 
 export {paidService};

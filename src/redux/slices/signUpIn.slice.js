@@ -1,9 +1,12 @@
 import {signUpInService} from "../../Services/signUpIn.service";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {useNavigate} from "react-router-dom";
 
 const initialState = {
     signInData: {},
-    signUpData: {}
+    signUpData: {},
+    error: false,
+    redirect:false
 }
 
 const signIn = createAsyncThunk('signInUpSlice/signIn',
@@ -42,22 +45,28 @@ const signUpInSlice = createSlice({
     reducers: {},
     extraReducers: builder =>
         builder
-
             .addCase(signIn.fulfilled, (state, action) => {
+                state.error = false
                 state.signInData = action.payload
+                state.redirect = true
                 console.log(state.signInData)
 
-                if (state.signInData.access_token){
+                if (state.signInData.access_token) {
                     let date1 = new Date();
-                    let date2= new Date(date1.getTime() + 30*60000);;
-                    let expires = "; expires="+date2.toString();
-                    document.cookie ="token="+state.signInData.access_token+expires;
-                    window.location = '/tables'
+                    let date2 = new Date(date1.getTime() + 30 * 60000);
+                    let expires = "; expires=" + date2.toString();
+                    document.cookie = "token=" + state.signInData.access_token + expires;
+
                 }
             })
+
+            .addCase(signIn.rejected, (state, action) => {
+                state.error = true
+                state.redirect = false
+            })
+
             .addCase(signUp.fulfilled, (state, action) => {
                 state.signUpData = action.payload
-                console.log(state.signUpData)
             })
 });
 

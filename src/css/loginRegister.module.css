@@ -8,6 +8,7 @@
 }
 
 .menu {
+    padding-top: 30px;
     border: 1px solid black;
     width: 400px;
     text-align: center;
@@ -22,11 +23,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 20px;
 }
 
 .form input {
-    margin-top: 5px;
     margin-bottom: 5px;
     font-size: 17px;
     width: 200px;
@@ -47,4 +46,10 @@
 
 .form button:active{
     background: #6e6e00;
+}
+
+.form p{
+    margin-bottom: 0;
+    background: red;
+    color: yellow;
 }
