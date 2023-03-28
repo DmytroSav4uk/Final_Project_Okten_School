@@ -67,7 +67,7 @@ const TableComponent = () => {
 
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
-    let [use, setUse] = useState(true)
+    let [filterWrittenInURL, setFilterWrittenInURL] = useState(true)
 
 
     const dispatch = useDispatch();
@@ -80,7 +80,8 @@ const TableComponent = () => {
     useEffect(() => {
         dispatch(paidActions.getAllPaid(search))
 
-        if (use && search.length > 8) {
+        //
+        if (filterWrittenInURL && search.length > 8) {
             setPaginateForFilteredData(true);
 
             let mySubString = search.substring(
@@ -88,34 +89,29 @@ const TableComponent = () => {
                 search.lastIndexOf("")
             );
 
-
             setFilter(mySubString)
-            setUse(false)
+            setFilterWrittenInURL(false)
         }
 
-    }, [dispatch, firstPage, search, use])
+    }, [dispatch, firstPage, search, filterWrittenInURL])
 
 
     const getFirstPage = () => {
-
         if (filter) {
             navigate("/tables?page=" + firstPage + "&" + filter)
         }
-
-        if (filter && use === false) {
+        if (filter && filterWrittenInURL === false) {
             navigate("/tables?page=" + firstPage + filter)
         } else {
             navigate("/tables?page=" + firstPage)
         }
-
-
     };
 
     function getNextPage() {
         if (paginateForFilteredData !== true) {
             currentPage++
             navigate("/tables?page=" + currentPage)
-        } else if (use === false) {
+        } else if (filterWrittenInURL === false) {
             currentPage++
             navigate("/tables?page=" + currentPage + filter)
         } else {
@@ -128,7 +124,7 @@ const TableComponent = () => {
         if (paginateForFilteredData !== true) {
             currentPage--
             navigate("/tables?page=" + currentPage)
-        } else if (use === false) {
+        } else if (filterWrittenInURL === false) {
             currentPage--
             navigate("/tables?page=" + currentPage + filter)
         } else {
@@ -224,8 +220,6 @@ const TableComponent = () => {
                     <p>total pages: {paidArr.totalPages}</p>
                 </div>
             </div>
-
-
         </div>
     )
 }
