@@ -2,10 +2,11 @@ import DataTable from "react-data-table-component-with-filter";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import {paidActions} from "../redux/slices/paid.slice";
 import css from "../css/table.module.css";
-import {useLocation, useNavigate} from "react-router-dom";
+
 
 const TableComponent = () => {
 
@@ -133,6 +134,10 @@ const TableComponent = () => {
         }
     }
 
+    const goToGetStarted = () => {
+        navigate('/GetStarted');
+    };
+
     function submit(data) {
 
         for (const key in data) {
@@ -152,9 +157,7 @@ const TableComponent = () => {
         dispatch(paidActions.getAllPaid('?page=1&' + query))
     }
 
-    function goToGetStarted() {
-        navigate('/GetStarted');
-    }
+
 
 
     return (

@@ -1,9 +1,10 @@
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 import {signUpInActions} from "../../redux/slices/signUpIn.slice";
 import css from "../../css/loginRegister.module.css"
-import {useNavigate} from "react-router-dom";
+
 
 const LoginComponent = () => {
 
@@ -19,6 +20,7 @@ const LoginComponent = () => {
 
     const submit = data => {
         dispatch(signUpInActions.signIn(data));
+        reset()
     };
 
     if (redirect) {
