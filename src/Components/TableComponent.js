@@ -80,7 +80,7 @@ const TableComponent = () => {
     useEffect(() => {
         dispatch(paidActions.getAllPaid(search))
 
-        //
+
         if (filterWrittenInURL && search.length > 8) {
             setPaginateForFilteredData(true);
 
