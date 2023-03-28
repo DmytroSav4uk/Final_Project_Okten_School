@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 
 import {signUpInActions} from "../../redux/slices/signUpIn.slice";
 import css from "../../css/loginRegister.module.css"
+import {useEffect} from "react";
 
 
 const LoginComponent = () => {
@@ -23,9 +24,19 @@ const LoginComponent = () => {
         reset()
     };
 
-    if (redirect) {
-        navigate('/tables?page=1')
-    }
+
+    useEffect(()=>{
+
+        if (redirect) {
+            navigate('/tables?page=1')
+        }
+
+
+    },[redirect,navigate])
+
+
+
+
 
     return (
         <div className={css.wrap}>
