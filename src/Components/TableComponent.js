@@ -68,11 +68,12 @@ const TableComponent = () => {
 
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
-    let [filterWrittenInURL, setFilterWrittenInURL] = useState(true)
+    let [filterWrittenInURL, setFilterWrittenInURL] = useState(true);
+    let [orderWay, setOrderWay] = useState(true);
 
 
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const searchParams = new URLSearchParams();
 
@@ -94,7 +95,7 @@ const TableComponent = () => {
             setFilterWrittenInURL(false)
         }
 
-    }, [dispatch, firstPage, search, filterWrittenInURL])
+    }, [dispatch, firstPage, search, filterWrittenInURL]);
 
 
     const getFirstPage = () => {
@@ -108,7 +109,7 @@ const TableComponent = () => {
         }
     };
 
-    function getNextPage() {
+    const getNextPage = () => {
         if (paginateForFilteredData !== true) {
             currentPage++
             navigate("/tables?page=" + currentPage)
@@ -119,9 +120,9 @@ const TableComponent = () => {
             currentPage++
             navigate("/tables?page=" + currentPage + "&" + filter)
         }
-    }
+    };
 
-    function getPreviousPage() {
+    const getPreviousPage = () => {
         if (paginateForFilteredData !== true) {
             currentPage--
             navigate("/tables?page=" + currentPage)
@@ -132,13 +133,13 @@ const TableComponent = () => {
             currentPage--
             navigate("/tables?page=" + currentPage + "&" + filter)
         }
-    }
+    };
 
     const goToGetStarted = () => {
         navigate('/GetStarted');
     };
 
-    function submit(data) {
+    const submit = (data) => {
 
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
@@ -155,9 +156,20 @@ const TableComponent = () => {
 
         window.history.pushState("", query, '/tables?page=1&' + query);
         dispatch(paidActions.getAllPaid('?page=1&' + query))
+    };
+
+    const accendingOrder = (orderBy) => {
+        let currentLocation = window.location.href
+        window.history.pushState("", "", currentLocation + '&order=' + orderBy)
+        setOrderWay(false);
     }
 
 
+    const descendingOrder = (orderBy) => {
+        let currentLocation = window.location.href
+        window.history.pushState("", "", currentLocation + '&order=' + "-" + orderBy)
+        setOrderWay(true);
+    }
 
 
     return (
@@ -167,9 +179,9 @@ const TableComponent = () => {
                     <h1> &lt; </h1>
                 </div>
             </div>
-            <div>
-                <form className={css.form} onChange={handleSubmit(submit)}>
-                    <input placeholder={'Name'} {...register('name')}/>
+            <div className={'filters'}>
+                <form className={css.form} onBlur={handleSubmit(submit)}>
+                    <input placeholder={'Name'}   {...register('name')}/>
                     <input placeholder={'Surname'} {...register('surname')}/>
                     <input placeholder={'Phone'}  {...register('phone')}/>
 
@@ -198,6 +210,13 @@ const TableComponent = () => {
 
                     <input placeholder={'Email'} {...register('email')}/>
                 </form>
+            </div>
+
+            <div className={'ordering'}>
+                <div onClick={() => {
+                    orderWay ? accendingOrder('name') : descendingOrder('name')
+                }}>Name
+                </div>
             </div>
 
             <div>
