@@ -69,13 +69,13 @@ const TableComponent = () => {
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
     let [filterWrittenInURL, setFilterWrittenInURL] = useState(true);
-    let [orderWay, setOrderWay] = useState(true);
 
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const searchParams = new URLSearchParams();
+    const urlSearchParams = new URLSearchParams();
+    // const [querySearchParams,setQuerySearchParams] = useSearchParams();
 
     const search = useLocation().search;
 
@@ -110,19 +110,38 @@ const TableComponent = () => {
     };
 
     const getNextPage = () => {
-        if (paginateForFilteredData !== true) {
+
+        let url = window.location.href;
+
+        if (url.includes('order=')) {
+            let length = 'order='.length
+            let order = url.slice(url.indexOf('order=') + length)
             currentPage++
-            navigate("/tables?page=" + currentPage)
-        } else if (filterWrittenInURL === false) {
-            currentPage++
-            navigate("/tables?page=" + currentPage + filter)
+            navigate("/tables?page=" + currentPage + "&order=" + order)
         } else {
-            currentPage++
-            navigate("/tables?page=" + currentPage + "&" + filter)
+            if (paginateForFilteredData !== true) {
+                currentPage++
+                navigate("/tables?page=" + currentPage)
+            } else if (filterWrittenInURL === false) {
+                currentPage++
+                navigate("/tables?page=" + currentPage + filter)
+            } else {
+                currentPage++
+                navigate("/tables?page=" + currentPage + "&" + filter)
+            }
         }
     };
 
     const getPreviousPage = () => {
+        let url = window.location.href;
+
+        if (url.includes('order=')) {
+            let length = 'order='.length
+            let order = url.slice(url.indexOf('order=') + length)
+            currentPage--
+            navigate("/tables?page=" + currentPage + "&" + order)
+        }
+
         if (paginateForFilteredData !== true) {
             currentPage--
             navigate("/tables?page=" + currentPage)
@@ -144,31 +163,53 @@ const TableComponent = () => {
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 if (data[key] !== "") {
-                    searchParams.append(`${key}`, `${data[key]}`);
+                    urlSearchParams.append(`${key}`, `${data[key]}`);
                 }
             }
         }
 
         setPaginateForFilteredData(true);
 
-        let query = searchParams.toString()
+        let query = urlSearchParams.toString()
         setFilter(query);
 
-        window.history.pushState("", query, '/tables?page=1&' + query);
-        dispatch(paidActions.getAllPaid('?page=1&' + query))
+        let url = window.location.href;
+
+        if (url.includes('order=')) {
+
+            let length = 'order='.length
+            let order = url.slice(url.indexOf('order=') + length)
+
+            window.history.pushState("", query, '/tables?page=1&' + query + "&order=" + order);
+            dispatch(paidActions.getAllPaid('?page=1&' + query + "&order=" + order))
+        } else {
+            window.history.pushState("", query, '/tables?page=1&' + query);
+            dispatch(paidActions.getAllPaid('?page=1&' + query))
+        }
+
+
     };
 
     const accendingOrder = (orderBy) => {
-        let currentLocation = window.location.href
-        window.history.pushState("", "", currentLocation + '&order=' + orderBy)
-        setOrderWay(false);
+        window.history.pushState("", "", 'tables?page=1&order=' + orderBy)
+        let url = window.location.href;
+        let mySubString = url.substring(
+            url.indexOf("?"),
+            url.lastIndexOf("")
+        );
+        dispatch(paidActions.getAllPaid(mySubString))
     }
 
 
     const descendingOrder = (orderBy) => {
-        let currentLocation = window.location.href
-        window.history.pushState("", "", currentLocation + '&order=' + "-" + orderBy)
-        setOrderWay(true);
+        window.history.pushState("", "", 'tables?page=1&order=-' + orderBy)
+        let url = window.location.href;
+
+        let mySubString = url.substring(
+            url.indexOf("?"),
+            url.lastIndexOf("")
+        );
+        dispatch(paidActions.getAllPaid(mySubString))
     }
 
 
@@ -214,8 +255,24 @@ const TableComponent = () => {
 
             <div className={'ordering'}>
                 <div onClick={() => {
-                    orderWay ? accendingOrder('name') : descendingOrder('name')
+                    window.location.href.includes('order=-') ? accendingOrder('name') : descendingOrder('name')
                 }}>Name
+                </div>
+                <div onClick={() => {
+                    window.location.href.includes('order=-') ? accendingOrder('surname') : descendingOrder('surname')
+                }}>Surname
+                </div>
+                <div onClick={() => {
+                    window.location.href.includes('order=-') ? accendingOrder('course') : descendingOrder('course')
+                }}>Course
+                </div>
+                <div onClick={() => {
+                    window.location.href.includes('order=-') ? accendingOrder('courseFormat') : descendingOrder('courseFormat')
+                }}>Course Format
+                </div>
+                <div onClick={() => {
+                    window.location.href.includes('order=-') ? accendingOrder('email') : descendingOrder('email')
+                }}>Email
                 </div>
             </div>
 
