@@ -4,13 +4,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {useLocation, useNavigate} from "react-router-dom";
 
-import {paidActions} from "../redux/slices/paid.slice";
-import css from "../css/table.module.css";
+import {paidActions} from "../../Redux/slices/paid.slice";
+import css from "../../Css/table.module.css";
+import loadingGif from "../../icons/loading.gif"
 
 
 const TableComponent = () => {
 
-    const {register, handleSubmit} = useForm({
+    const {register,reset, handleSubmit} = useForm({
         mode: 'onChange'
     });
 
@@ -18,48 +19,50 @@ const TableComponent = () => {
 
     const columns = [
         {
-            name: 'Name',
+            selector: row => row.id,
+        },
+
+        {
             selector: row => row.name,
-            sortable: true,
         },
 
         {
-            name: 'Surname',
             selector: row => row.surname,
-            sortable: true,
         },
 
         {
-            name: 'Phone',
             selector: row => row.phone,
-            sortable: true,
         },
 
         {
-            name: 'Course',
             selector: row => row.course,
-            sortable: true,
         },
 
         {
-            name: 'Course Format',
             selector: row => row.courseFormat,
-            sortable: true,
         },
 
         {
-            name: 'Course Type',
             selector: row => row.courseType,
-            sortable: true,
-
         },
 
         {
-            name: 'Email',
             selector: row => row.email,
-            sortable: true,
+        },
+
+        {
+            selector: row => row.user?.profile.username,
         }
     ];
+
+    let currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const urlSearchParams = new URLSearchParams();
+
+    const search = useLocation().search;
 
     const {paidArr} = useSelector(state => state.paidReducer);
     const {firstPage} = useSelector(state => state.paidReducer);
@@ -71,17 +74,11 @@ const TableComponent = () => {
     let [filterWrittenInURL, setFilterWrittenInURL] = useState(true);
 
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
-    const urlSearchParams = new URLSearchParams();
-    // const [querySearchParams,setQuerySearchParams] = useSearchParams();
 
-    const search = useLocation().search;
 
     useEffect(() => {
         dispatch(paidActions.getAllPaid(search))
-
 
         if (filterWrittenInURL && search.length > 8) {
             setPaginateForFilteredData(true);
@@ -154,12 +151,8 @@ const TableComponent = () => {
         }
     };
 
-    const goToGetStarted = () => {
-        navigate('/GetStarted');
-    };
 
     const submit = (data) => {
-
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 if (data[key] !== "") {
@@ -186,8 +179,6 @@ const TableComponent = () => {
             window.history.pushState("", query, '/tables?page=1&' + query);
             dispatch(paidActions.getAllPaid('?page=1&' + query))
         }
-
-
     };
 
     const accendingOrder = (orderBy) => {
@@ -212,48 +203,95 @@ const TableComponent = () => {
         dispatch(paidActions.getAllPaid(mySubString))
     }
 
+    const logOut = () => {
+        localStorage.removeItem('currentUser');
+        //window.location ,щоб сторінка перезавантажилася і очистився кеш
+        window.location = '/getStarted';
+    };
+
+    const goToAdminPage = () => {
+        navigate('/admin')
+    }
+
 
     return (
         <div>
             <div className={css.header}>
-                <div onClick={goToGetStarted} className={css.buttonGoBack}>
-                    <h1> &lt; </h1>
+                <div className={css.userName}>
+                    <h1> Hello, {currentUser.profile.name}!</h1>
                 </div>
+                <div onClick={logOut} className={css.logout}>
+                    <h1>logout</h1>
+                </div>
+
+                {currentUser.is_superuser ?
+                    <div onClick={goToAdminPage} className={css.admin}><h1>Admin Page</h1></div> : null}
             </div>
             <div className={'filters'}>
                 <form className={css.form} onBlur={handleSubmit(submit)}>
-                    <input placeholder={'Name'}   {...register('name')}/>
-                    <input placeholder={'Surname'} {...register('surname')}/>
-                    <input placeholder={'Phone'}  {...register('phone')}/>
+                    <div>
+                        <input placeholder={'Id'}   {...register('id')}/>
+                    </div>
 
-                    <select id="Course" name="Course" {...register('course')}>
-                        <option value=""></option>
-                        <option value="FS">Full Stack</option>
-                        <option value="JSCX">Java Script Complex</option>
-                        <option value="JCX">Java Complex</option>
-                        <option value="PCX">Python Complex</option>
-                        <option value="QACX">QA Complex</option>
-                    </select>
+                    <div>
+                        <input placeholder={'Name'}   {...register('name')}/>
 
-                    <select id="CourseFormat" name="CourseFormat" {...register('courseFormat')}>
-                        <option value=""></option>
-                        <option value="static">Static</option>
-                        <option value="online">Online</option>
-                    </select>
+                    </div>
 
-                    <select id="CourseType" name="CourseType" {...register('CourseType')}>
-                        <option value=""></option>
-                        <option value="minimal">Minimal</option>
-                        <option value="pro">Pro</option>
-                        <option value="premium">Premium</option>
-                        <option value="incubator">Incubator</option>
-                    </select>
+                    <div>
+                        <input placeholder={'Surname'} {...register('surname')}/>
+                    </div>
 
-                    <input placeholder={'Email'} {...register('email')}/>
+                    <div>
+                        <input placeholder={'Phone'}  {...register('phone')}/>
+                    </div>
+
+                    <div>
+                        <select id="Course" name="Course" {...register('course')}>
+                            <option value=""></option>
+                            <option value="FS">Full Stack</option>
+                            <option value="FE">Front End</option>
+                            <option value="JSCX">Java Script Complex</option>
+                            <option value="JCX">Java Complex</option>
+                            <option value="PCX">Python Complex</option>
+                            <option value="QACX">QA Complex</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="CourseFormat" name="CourseFormat" {...register('courseFormat')}>
+                            <option value=""></option>
+                            <option value="static">Static</option>
+                            <option value="online">Online</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="CourseType" name="CourseType" {...register('CourseType')}>
+                            <option value=""></option>
+                            <option value="minimal">Minimal</option>
+                            <option value="pro">Pro</option>
+                            <option value="premium">Premium</option>
+                            <option value="incubator">Incubator</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input className={css.smallAlign} placeholder={'Email'} {...register('email')}/>
+                    </div>
+
+                    <div className={css.reset} onClick={()=>{reset();
+
+                    window.history.pushState("","","/tables?page=1")
+                        dispatch(paidActions.getAllPaid('?page=1'))
+                    }}>
+reset filters
+                    </div>
                 </form>
             </div>
 
-            <div className={'ordering'}>
+            <div className={css.ordering}>
+                <div onClick={() => {
+                    window.location.href.includes('order=-') ? accendingOrder('id') : descendingOrder('id')
+                }}>Id
+                </div>
                 <div onClick={() => {
                     window.location.href.includes('order=-') ? accendingOrder('name') : descendingOrder('name')
                 }}>Name
@@ -262,6 +300,7 @@ const TableComponent = () => {
                     window.location.href.includes('order=-') ? accendingOrder('surname') : descendingOrder('surname')
                 }}>Surname
                 </div>
+                <div>Phone</div>
                 <div onClick={() => {
                     window.location.href.includes('order=-') ? accendingOrder('course') : descendingOrder('course')
                 }}>Course
@@ -270,9 +309,19 @@ const TableComponent = () => {
                     window.location.href.includes('order=-') ? accendingOrder('courseFormat') : descendingOrder('courseFormat')
                 }}>Course Format
                 </div>
+
+                <div onClick={() => {
+                    window.location.href.includes('order=-') ? accendingOrder('courseType') : descendingOrder('courseType')
+                }}>Course Type
+                </div>
+
                 <div onClick={() => {
                     window.location.href.includes('order=-') ? accendingOrder('email') : descendingOrder('email')
                 }}>Email
+                </div>
+
+                <div>
+                    Mentor
                 </div>
             </div>
 
@@ -283,6 +332,10 @@ const TableComponent = () => {
                     data={paidArr.content}
                     expandableRows
                     expandableRowsComponent={ExpandedComponent}
+                    noTableHead={true}
+                    noDataComponent={<div
+                        style={{background: "#FBFBFB", width: "100%", display: "flex", justifyContent: "center"}}><img
+                        src={loadingGif} alt={"loading"}/></div>}
                 />
             </div>
 

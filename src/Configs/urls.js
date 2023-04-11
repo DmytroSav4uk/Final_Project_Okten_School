@@ -10,6 +10,9 @@ const urls = {
     forAdmin:
         {
             getAllUsers: '/admin/users',
+            userRegister:'/admin/users/reg',
+            userActivate:'/admin/activate',
+            recreateToken:'/admin/users/recreate'
         },
 
     paid: {

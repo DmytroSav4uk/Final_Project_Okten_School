@@ -16,7 +16,6 @@ const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
         try {
             const {data} = await paidService.getAllPaid(page)
             return data;
-
         } catch (e) {
             e.rejectWithValue(e.response.data)
         }

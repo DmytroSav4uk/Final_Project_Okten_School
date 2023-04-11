@@ -1,0 +1,187 @@
+.header{
+    background: slateblue;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    height: 60px;
+}
+
+
+.button {
+    background: deepskyblue;
+    border-radius: 10px;
+    width: fit-content;
+
+    cursor: pointer;
+    margin-right: 20px;
+    height: 40px;
+    display: grid;
+    align-items: center;
+    border: 2px solid deepskyblue;
+}
+
+.button h1 {
+    margin: 0;
+    color: white;
+    font-size: 25px;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+.userForm{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+    position: fixed;
+    background: white;
+    width: 500px;
+    height: fit-content;
+    transition: ease-in-out 0.3s;
+    border-radius: 10px;
+
+    z-index: 2;
+    top: 100px;
+    left: 33%;
+
+}
+
+
+
+.black{
+    top: 1px;
+    background: rgba(0, 0, 0, 0.73);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+
+.registerForm{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.registerForm input{
+    width: 50%;
+    margin: 5px;
+    font-size: 20px;
+}
+
+.registerForm button{
+    width: 50%;
+
+    font-size: 17px;
+
+    height: 65px;
+    background: deepskyblue;
+    border:none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.copyUrl{
+    background: deepskyblue;
+    text-align: center;
+    width: 50%;
+    color: white;
+    border-radius: 10px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+
+.wrap{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Jost', sans-serif;
+
+}
+
+.main{
+    padding-top: 40px;
+    width: 450px;
+    height: 500px;
+    background: slateblue;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 5px 20px 50px #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main input{
+    width: 60%;
+    height: 20px;
+    background: #e0dede;
+    justify-content: center;
+    display: flex;
+    margin: 20px auto;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.main button{
+    width: 60%;
+    height: 40px;
+    justify-content: center;
+    display: block;
+    color: #fff;
+    background: #573b8a;
+    font-size: 1em;
+    font-weight: bold;
+    margin: 20px auto 10px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    transition: .2s ease-in;
+    cursor: pointer;
+}
+.main button:hover{
+    background: #6d44b8;
+}
+
+.main h1{
+    color: white;
+    text-align: center;
+    margin-bottom: 200px;
+}
+
+.registerForm span{
+    padding: 10px;
+    color: red;
+    background: deepskyblue;
+    border-radius: 10px;
+    font-family: Calibri;
+    font-weight: bolder;
+}
+
+.successMesage{
+    background: deepskyblue;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}

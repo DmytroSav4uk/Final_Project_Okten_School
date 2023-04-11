@@ -7,7 +7,7 @@ const initialState = {
     signInData: {},
     signUpData: {},
     error: false,
-    redirect:false
+    redirect: false
 }
 
 const signIn = createAsyncThunk('signInUpSlice/signIn',
@@ -16,28 +16,12 @@ const signIn = createAsyncThunk('signInUpSlice/signIn',
 
         try {
             const {data} = await signUpInService.signIn(signInInputData)
-            console.log(data)
+            localStorage.setItem('currentUser', JSON.stringify(data))
             return data;
-
         } catch (e) {
             e.rejectWithValue(e.response.data)
         }
     })
-
-
-const signUp = createAsyncThunk('signInUpSlice/signUp',
-
-    async ({rejectWithValue}) => {
-
-        try {
-            const {data} = await signUpInService.signUp()
-            return data;
-
-        } catch (e) {
-            e.rejectWithValue(e.response.data)
-        }
-    });
-
 
 const signUpInSlice = createSlice({
 
@@ -50,32 +34,18 @@ const signUpInSlice = createSlice({
                 state.error = false
                 state.signInData = action.payload
                 state.redirect = true
-                console.log(state.signInData)
-
-                if (state.signInData.access_token) {
-                    let date1 = new Date();
-                    let date2 = new Date(date1.getTime() + 30 * 60000);
-                    let expires = "; expires=" + date2.toString();
-                    document.cookie = "token=" + state.signInData.access_token + expires;
-
-                }
             })
 
             .addCase(signIn.rejected, (state, action) => {
                 state.error = true
                 state.redirect = false
             })
-
-            .addCase(signUp.fulfilled, (state, action) => {
-                state.signUpData = action.payload
-            })
 });
 
 const {reducer: signUpInReducer} = signUpInSlice;
 
 const signUpInActions = {
-    signIn,
-    signUp
+    signIn
 }
 
 
