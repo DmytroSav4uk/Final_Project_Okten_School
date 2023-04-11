@@ -8,7 +8,7 @@ import css from "../../Css/getStarted.module.css"
 
 const GetStartedComponent = () => {
 
-    localStorage.removeItem('tokens')
+    localStorage.removeItem('currentUser')
 
     const {register, handleSubmit, reset} = useForm({
         mode: 'onChange'
