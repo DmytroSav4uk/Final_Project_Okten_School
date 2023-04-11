@@ -21,7 +21,7 @@ const AdminComponent = () => {
     let [successMesage, setSuccessMessage] = useState(false);
     let [userForm, setUserForm] = useState(false);
 
-    const {register, handleSubmit, formState: {isValid, errors}} = useForm({
+    const {register,reset, handleSubmit, formState: {isValid, errors}} = useForm({
         resolver: joiResolver(formValidator),
         mode: 'all'
     });
@@ -87,6 +87,7 @@ const AdminComponent = () => {
     }
     const submit = (data) => {
         dispatch(adminActions.registerUser(data))
+        reset()
     };
 
     const createActivationLink = (id) => {
