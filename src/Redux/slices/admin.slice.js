@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {adminService} from "../../Services/admin.service";
+import {adminService} from "../../services/admin.service";
 
 
 const initialState = {
@@ -58,7 +58,17 @@ const recreateActivationLink = createAsyncThunk('adminSlice/activateUser',
         }
     });
 
+const deleteUser = createAsyncThunk('adminSlice/deleteUser',
 
+    async (id, {rejectWithValue}) => {
+
+        try {
+            const {data} = await adminService.deleteUser(id)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    });
 
 
 const adminSlice = createSlice({
@@ -79,10 +89,7 @@ const adminSlice = createSlice({
             .addCase(recreateActivationLink.fulfilled, (state, action) => {
                 state.recreatedActivationLink = action.payload
             })
-
-
-
-});
+    });
 
 const {reducer: adminReducer} = adminSlice;
 
@@ -90,7 +97,8 @@ const adminActions = {
     getAllUsers,
     registerUser,
     activateUser,
-    recreateActivationLink
+    recreateActivationLink,
+    deleteUser
 }
 
 

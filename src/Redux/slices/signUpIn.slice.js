@@ -1,4 +1,4 @@
-import {signUpInService} from "../../Services/signUpIn.service";
+import {signUpInService} from "../../services/signUpIn.service";
 
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
@@ -7,7 +7,8 @@ const initialState = {
     signInData: {},
     signUpData: {},
     error: false,
-    redirect: false
+    redirect: false,
+    isLogged: false
 }
 
 const signIn = createAsyncThunk('signInUpSlice/signIn',
@@ -34,6 +35,7 @@ const signUpInSlice = createSlice({
                 state.error = false
                 state.signInData = action.payload
                 state.redirect = true
+                state.isLogged = true
             })
 
             .addCase(signIn.rejected, (state, action) => {

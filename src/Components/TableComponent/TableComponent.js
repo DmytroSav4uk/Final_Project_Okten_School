@@ -2,20 +2,21 @@ import DataTable from "react-data-table-component-with-filter";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import {paidActions} from "../../Redux/slices/paid.slice";
-import css from "../../Css/table.module.css";
+import css from "../../css/table.module.css";
 import loadingGif from "../../icons/loading.gif"
+import {EditPaidComponent} from "./EditPaidComponent";
+import {CommentForm} from "./CommentForm";
 
 
 const TableComponent = () => {
 
-    const {register,reset, handleSubmit} = useForm({
+    const {register, reset, handleSubmit} = useForm({
         mode: 'onChange'
     });
 
-    const ExpandedComponent = ({data}) => <pre>{JSON.stringify(data, null, 2)}</pre>;
 
     const columns = [
         {
@@ -23,36 +24,37 @@ const TableComponent = () => {
         },
 
         {
-            selector: row => row.name,
+            selector: row => row.name ? row.name : "null",
         },
 
         {
-            selector: row => row.surname,
+            selector: row => row.surname ? row.surname : "null",
         },
 
         {
-            selector: row => row.phone,
+            selector: row => row.phone ? row.phone : "null",
         },
 
         {
-            selector: row => row.course,
+            selector: row => row.course ? row.course : " null",
         },
 
         {
-            selector: row => row.courseFormat,
+            selector: row => row.courseFormat ? row.courseFormat : "null",
         },
 
         {
-            selector: row => row.courseType,
+            selector: row => row.courseType ? row.courseType : "null",
         },
 
         {
-            selector: row => row.email,
+            selector: row => row.email ? row.email : "null",
         },
 
         {
-            selector: row => row.user?.profile.username,
-        }
+            selector: row => row.user?.profile.username ? row.user?.profile.username : "null",
+        },
+
     ];
 
     let currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
@@ -62,49 +64,57 @@ const TableComponent = () => {
 
     const urlSearchParams = new URLSearchParams();
 
-    const search = useLocation().search;
+    let search = window.location.search;
 
     const {paidArr} = useSelector(state => state.paidReducer);
-    const {firstPage} = useSelector(state => state.paidReducer);
+
+    const {rejected} = useSelector(state => state.paidReducer);
+    const {loading} = useSelector(state => state.paidReducer);
+    const {success} = useSelector(state => state.paidReducer);
+    const {isLogged} = useSelector(state => state.signUpInReducer);
 
     let {currentPage} = useSelector(state => state.paidReducer);
+    let {paidById} = useSelector(state => state.paidReducer);
+    const {showEdit} = useSelector(state => state.paidReducer);
 
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
     let [filterWrittenInURL, setFilterWrittenInURL] = useState(true);
-
-
-
+    let [timer, setTimer] = useState(null);
+    let [localFilter, setLocalFilter] = useState('');
+    let [showComment, setShowComment] = useState(false);
 
 
     useEffect(() => {
+
         dispatch(paidActions.getAllPaid(search))
 
         if (filterWrittenInURL && search.length > 8) {
             setPaginateForFilteredData(true);
 
-            let mySubString = search.substring(
-                search.indexOf("&"),
-                search.lastIndexOf("")
-            );
-
-            setFilter(mySubString)
+            setFilter(getStringBetween(search, `page=${currentPage}`, 'order'))
             setFilterWrittenInURL(false)
         }
+    }, [currentPage, dispatch, filterWrittenInURL, search]);
 
-    }, [dispatch, firstPage, search, filterWrittenInURL]);
+
+    if (isLogged) {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.go(1);
+        };
+    }
 
 
-    const getFirstPage = () => {
-        if (filter) {
-            navigate("/tables?page=" + firstPage + "&" + filter)
-        }
-        if (filter && filterWrittenInURL === false) {
-            navigate("/tables?page=" + firstPage + filter)
+    const getStringBetween = (str, start, end) => {
+        const result = str?.match(new RegExp(start + "(.*)" + end));
+        if (result) {
+            return result[1];
         } else {
-            navigate("/tables?page=" + firstPage)
+            return '';
         }
-    };
+    }
+
 
     const getNextPage = () => {
 
@@ -114,7 +124,14 @@ const TableComponent = () => {
             let length = 'order='.length
             let order = url.slice(url.indexOf('order=') + length)
             currentPage++
-            navigate("/tables?page=" + currentPage + "&order=" + order)
+
+            if (filter === '') {
+                navigate("/tables?page=" + currentPage + "&order=" + order
+                )
+            } else {
+                navigate("/tables?page=" + currentPage + filter + "order=" + order)
+            }
+
         } else {
             if (paginateForFilteredData !== true) {
                 currentPage++
@@ -130,29 +147,37 @@ const TableComponent = () => {
     };
 
     const getPreviousPage = () => {
+
         let url = window.location.href;
 
         if (url.includes('order=')) {
             let length = 'order='.length
             let order = url.slice(url.indexOf('order=') + length)
             currentPage--
-            navigate("/tables?page=" + currentPage + "&" + order)
-        }
 
-        if (paginateForFilteredData !== true) {
-            currentPage--
-            navigate("/tables?page=" + currentPage)
-        } else if (filterWrittenInURL === false) {
-            currentPage--
-            navigate("/tables?page=" + currentPage + filter)
+            if (filter !== '') {
+                navigate("/tables?page=" + currentPage + "&" + filter + "&order=" + order)
+            } else {
+                navigate("/tables?page=" + currentPage + "&order=" + order)
+            }
+
         } else {
-            currentPage--
-            navigate("/tables?page=" + currentPage + "&" + filter)
+            if (paginateForFilteredData !== true) {
+                currentPage--
+                navigate("/tables?page=" + currentPage)
+            } else if (filterWrittenInURL === false) {
+                currentPage--
+                navigate("/tables?page=" + currentPage + filter)
+            } else {
+                currentPage--
+                navigate("/tables?page=" + currentPage + "&" + filter)
+            }
         }
     };
 
 
     const submit = (data) => {
+
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 if (data[key] !== "") {
@@ -160,52 +185,49 @@ const TableComponent = () => {
                 }
             }
         }
-
-        setPaginateForFilteredData(true);
-
         let query = urlSearchParams.toString()
         setFilter(query);
-
         let url = window.location.href;
+        setLocalFilter(getStringBetween(url, 'page=' + currentPage, '&order').replace("&", ""))
+        console.log(localFilter)
 
-        if (url.includes('order=')) {
+        clearTimeout(timer)
 
-            let length = 'order='.length
-            let order = url.slice(url.indexOf('order=') + length)
+        const newTimer = setTimeout(() => {
 
-            window.history.pushState("", query, '/tables?page=1&' + query + "&order=" + order);
-            dispatch(paidActions.getAllPaid('?page=1&' + query + "&order=" + order))
-        } else {
-            window.history.pushState("", query, '/tables?page=1&' + query);
-            dispatch(paidActions.getAllPaid('?page=1&' + query))
-        }
+            let url = window.location.href;
+
+            if (url.includes('order=')) {
+
+                let length = 'order='.length
+                let order = url.slice(url.indexOf('order=') + length)
+
+                window.history.pushState("", query, '/tables?page=1&' + query + "&order=" + order);
+                dispatch(paidActions.getAllPaid('?page=1&' + query + "&order=" + order))
+            } else {
+                window.history.pushState("", query, '/tables?page=1&' + query);
+                dispatch(paidActions.getAllPaid('?page=1&' + query))
+            }
+        }, 1000)
+        setTimer(newTimer)
+        setPaginateForFilteredData(true);
     };
+
 
     const accendingOrder = (orderBy) => {
         window.history.pushState("", "", 'tables?page=1&order=' + orderBy)
-        let url = window.location.href;
-        let mySubString = url.substring(
-            url.indexOf("?"),
-            url.lastIndexOf("")
-        );
-        dispatch(paidActions.getAllPaid(mySubString))
+        let url = window.location.search;
+        dispatch(paidActions.getAllPaid(url))
     }
-
 
     const descendingOrder = (orderBy) => {
         window.history.pushState("", "", 'tables?page=1&order=-' + orderBy)
-        let url = window.location.href;
-
-        let mySubString = url.substring(
-            url.indexOf("?"),
-            url.lastIndexOf("")
-        );
-        dispatch(paidActions.getAllPaid(mySubString))
+        let url = window.location.search;
+        dispatch(paidActions.getAllPaid(url))
     }
 
     const logOut = () => {
         localStorage.removeItem('currentUser');
-        //window.location ,щоб сторінка перезавантажилася і очистився кеш
         window.location = '/getStarted';
     };
 
@@ -213,22 +235,100 @@ const TableComponent = () => {
         navigate('/admin')
     }
 
+    const editPaid = (id) => {
+        dispatch(paidActions.getPaidById(id))
+    }
+
+
+    const editDisabled = (user) => {
+        return !(user === null || user?.profile.username === currentUser.profile.username);
+    };
+
+    const commentDisabled = (user) => {
+        return !(user === null || user?.profile.username === currentUser.profile.username);
+    }
+
+    const addComment = (id) => {
+        dispatch(paidActions.getPaidForComment(id))
+        setShowComment(true)
+    }
+
+    const ExpandedComponent = ({data}) =>
+        <>
+            <div className={css.DetailsFather}>
+
+                <div className={css.details}>
+                   <p>Status: {data.status}</p>
+                </div>
+
+                <div className={css.details}>
+                    <div>
+                        <p>Name: {data.name}</p>
+                        <p>Surname: {data.surname}</p>
+                    </div>
+
+                    <div>
+                        <p>Email: {data.email}</p>
+                        <p>Phone: {data.phone}</p>
+                        <p>Age: {data.age}</p>
+                    </div>
+
+                    <div>
+                        <p>Course: {data.course}</p>
+                        <p>Course Format: {data.courseFormat}</p>
+                        <p>Course Type: {data.courseType}</p>
+                    </div>
+
+                    <div>
+                        <p>Sum: {data.sum? data.sum : 0}</p>
+                        <p>Already Paid: {data.alreadyPaid ? data.alreadyPaid : 0}</p>
+                    </div>
+                </div>
+
+
+
+                <button disabled={editDisabled(data.user)} onClick={() => editPaid(data.id)}>edit</button>
+
+            </div>
+            <div className={css.msgCmntFather}>
+                <div className={css.message}>
+                    <p>message: {data.message ? data.message : <>null</>}</p>
+                    <p>UTM: {data.utm ? data.utm : <>null</>}</p>
+                </div>
+                <div className={css.comments}>
+                    {data.comments.map(comment => <div
+                        key={comment.id}>
+                        <p>
+                            {comment.comment}|{comment.created_at}
+                        </p>
+                    </div>)}
+
+                    {showComment ? <CommentForm id={paidById}/> : null}
+
+
+                    <button disabled={commentDisabled(data.user)} onClick={() => addComment(data.id)}>add comment
+                    </button>
+                </div>
+            </div>
+        </>;
+
+    //******************************************************
 
     return (
         <div>
             <div className={css.header}>
                 <div className={css.userName}>
-                    <h1> Hello, {currentUser.profile.name}!</h1>
+                    <h1> Hello, {currentUser?.profile.name}!</h1>
                 </div>
                 <div onClick={logOut} className={css.logout}>
                     <h1>logout</h1>
                 </div>
 
-                {currentUser.is_superuser ?
+                {currentUser?.is_superuser ?
                     <div onClick={goToAdminPage} className={css.admin}><h1>Admin Page</h1></div> : null}
             </div>
             <div className={'filters'}>
-                <form className={css.form} onBlur={handleSubmit(submit)}>
+                <form className={css.form} onChange={handleSubmit(submit)}>
                     <div>
                         <input placeholder={'Id'}   {...register('id')}/>
                     </div>
@@ -277,16 +377,16 @@ const TableComponent = () => {
                         <input className={css.smallAlign} placeholder={'Email'} {...register('email')}/>
                     </div>
 
-                    <div className={css.reset} onClick={()=>{reset();
-
-                    window.history.pushState("","","/tables?page=1")
+                    <div className={css.reset} onClick={() => {
+                        reset();
+                        setFilter('')
+                        window.history.pushState("", "", "/tables?page=1")
                         dispatch(paidActions.getAllPaid('?page=1'))
                     }}>
-reset filters
+                        reset filters
                     </div>
                 </form>
             </div>
-
             <div className={css.ordering}>
                 <div onClick={() => {
                     window.location.href.includes('order=-') ? accendingOrder('id') : descendingOrder('id')
@@ -320,36 +420,63 @@ reset filters
                 }}>Email
                 </div>
 
+
                 <div>
                     Mentor
                 </div>
             </div>
 
             <div>
-                <DataTable
-                    columns={columns}
-                    responsive={true}
-                    data={paidArr.content}
-                    expandableRows
-                    expandableRowsComponent={ExpandedComponent}
-                    noTableHead={true}
-                    noDataComponent={<div
-                        style={{background: "#FBFBFB", width: "100%", display: "flex", justifyContent: "center"}}><img
-                        src={loadingGif} alt={"loading"}/></div>}
-                />
+
+                {loading ?
+                    <div style={{background: "#FBFBFB", width: "100%", display: "flex", justifyContent: "center"}}>
+                        <img src={loadingGif} alt={"loading"}/>
+                    </div> : null}
+
+
+                {rejected ? <h1 style={{textAlign: 'center', margin: '235.5px'}}>Something went wrong</h1> : null}
+                {success ?
+                    <DataTable
+                        columns={columns}
+                        responsive={true}
+                        data={paidArr.content}
+                        expandableRows
+                        expandableRowsComponent={ExpandedComponent}
+                        noTableHead={true}
+                    />
+                    : null}
             </div>
+
+
+            <div className={css.black}>
+
+                <div className={css.editForm}>
+                    {showEdit ?
+                        <div className={css.black}>
+                            <EditPaidComponent preloadedValues={paidById}/>
+                        </div>
+                        : null}
+                </div>
+
+
+            </div>
+
 
             <div className={css.paginator}>
                 <div className={css.buttons}>
                     <button className={css.button} disabled={currentPage === 1} onClick={getPreviousPage}>Previous
                     </button>
-                    <button className={css.button}
-                            onClick={currentPage === paidArr.totalPages ? getFirstPage : getNextPage}>Next
+                    <button className={css.button} disabled={paidArr.last === true}
+                            onClick={getNextPage}>Next
                     </button>
                 </div>
                 <div className={css.paragraphs}>
                     <p>current page: {currentPage}</p>
-                    <p>total pages: {paidArr.totalPages}</p>
+
+
+                        <p>total pages: {paidArr.totalPages}</p>
+
+
                 </div>
             </div>
         </div>

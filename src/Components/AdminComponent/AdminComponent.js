@@ -6,8 +6,8 @@ import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi"
 
 import {adminActions} from "../../Redux/slices/admin.slice";
-import css from "../../Css/admin.module.css"
-import {formValidator} from "../../Validators/form.validator";
+import css from "../../css/admin.module.css"
+import {formValidator} from "../../validators/form.validator";
 
 const AdminComponent = () => {
 
@@ -20,8 +20,10 @@ const AdminComponent = () => {
 
     let [successMesage, setSuccessMessage] = useState(false);
     let [userForm, setUserForm] = useState(false);
+    let [confirmDiv, setConfirmDiv] = useState(false)
+    let [deleteSuccess, setDeleteSuccess] = useState(false)
 
-    const {register,reset, handleSubmit, formState: {isValid, errors}} = useForm({
+    const {register, reset, handleSubmit, formState: {isValid, errors}} = useForm({
         resolver: joiResolver(formValidator),
         mode: 'all'
     });
@@ -33,6 +35,26 @@ const AdminComponent = () => {
             {data.is_active ? null : <button onClick={() => {
                 createActivationLink(data.id)
             }}>create activation link</button>}
+
+            <button onClick={() => {
+                setConfirmDiv(true)
+            }}>delete user
+            </button>
+            {confirmDiv ?
+                <div>
+                    <p>are you sure?</p>
+                    <button onClick={() => {
+                        deleteUser(data.id)
+                    }}>yes!
+                    </button>
+                    <button onClick={() => {
+                        setConfirmDiv(false)
+                    }}>no..
+                    </button>
+                </div>
+                : null}
+
+            {deleteSuccess ? <p>user deleted,please reload the page</p> : null}
         </>
     ;
 
@@ -73,7 +95,7 @@ const AdminComponent = () => {
         } else {
             navigate('/tables?page=1')
         }
-    }, [])
+    }, [dispatch, navigate, user?.is_superuser])
 
     const goToTables = () => {
         navigate('/tables')
@@ -86,14 +108,33 @@ const AdminComponent = () => {
         setUserForm(false)
     }
     const submit = (data) => {
+        console.log(data)
         dispatch(adminActions.registerUser(data))
         reset()
     };
 
     const createActivationLink = (id) => {
         dispatch(adminActions.recreateActivationLink(id))
-        //не працює запит
-        console.log(recreatedActivationLink)
+
+        if (recreatedActivationLink) {
+            navigator.clipboard.writeText(`http://localhost:3000/admin/activate/${recreatedActivationLink.token}`);
+        }
+
+    }
+
+
+    const deleteUser = async (id) => {
+       let response = await dispatch(adminActions.deleteUser(id))
+
+        if (response){
+            setDeleteSuccess(true)
+        }
+
+        setTimeout(() => {
+            setSuccessMessage(false);
+            setConfirmDiv(false);
+            setDeleteSuccess(false);
+        }, 5000)
     }
 
     return (
@@ -137,11 +178,11 @@ const AdminComponent = () => {
 
                             <form className={css.registerForm} onSubmit={handleSubmit(submit)}>
                                 <input placeholder={'email'} {...register('email')}/>
-                                {errors.email && <span>{errors.email.message}</span>}
+                                {errors.email && <span className={css.span}>{errors.email.message}</span>}
                                 <input placeholder={'name'} {...register('name')}/>
-                                {errors.name && <span>{errors.name.message}</span>}
+                                {errors.name && <span className={css.span}>{errors.name.message}</span>}
                                 <input placeholder={'username'} {...register('username')}/>
-                                {errors.username && <span>{errors.username.message}</span>}
+                                {errors.username && <span className={css.span}>{errors.username.message}</span>}
                                 <button disabled={!isValid} type={"submit"}>submit</button>
                             </form>
 

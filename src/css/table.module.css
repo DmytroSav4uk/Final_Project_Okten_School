@@ -47,7 +47,7 @@
     width: 100px;
     height: 65px;
     background: deepskyblue;
-    border:none;
+    border: none;
     color: white;
     border-radius: 10px;
 }
@@ -60,14 +60,14 @@
     background: deepskyblue;
 }
 
-.reset{
+.reset {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 25px;
     background: deepskyblue;
     color: white;
-   cursor: pointer;
+    cursor: pointer;
     border-radius: 10px;
 }
 
@@ -87,7 +87,7 @@
 .form {
     display: flex;
     padding-left: 48px;
- }
+}
 
 .form div {
 
@@ -99,11 +99,11 @@
     padding-right: 30px;
 }
 
-.form select{
+.form select {
     width: 100%;
 }
 
-.form input{
+.form input {
     width: 100%;
 }
 
@@ -127,7 +127,7 @@
     text-align: center;
 }
 
-.ordering{
+.ordering {
     display: flex;
     width: 100%;
     color: rgba(0, 0, 0, 0.87);
@@ -142,7 +142,8 @@
 
     padding-left: 48px;
 }
-.ordering div{
+
+.ordering div {
     text-align: left;
 
     -moz-box-flex: 1;
@@ -161,13 +162,12 @@
     width: 170px;
 }
 
-.smallAlign{
-margin-left: 20px;
+.smallAlign {
+    margin-left: 20px;
 }
 
 
-
-.userName{
+.userName {
     border-radius: 10px;
     border: 2px solid deepskyblue;
     width: 200px;
@@ -178,14 +178,14 @@ margin-left: 20px;
     align-items: center;
 }
 
-.userName h1{
+.userName h1 {
     margin: 0;
     color: white;
     font-size: 25px;
     text-align: center;
 }
 
-.admin{
+.admin {
     background: deepskyblue;
     border-radius: 10px;
     width: 200px;
@@ -203,4 +203,85 @@ margin-left: 20px;
     color: white;
     font-size: 25px;
     text-align: center;
+}
+
+
+.msgCmntFather {
+    display: flex;
+}
+
+.message {
+    border: 1px solid black;
+    width: 25%;
+    margin-left: 48px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    border-radius: 10px;
+}
+
+.comments {
+    border: 1px solid black;
+    width: 25%;
+    margin-left: 48px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.DetailsFather {
+    margin-top: 10px;
+    overflow: hidden;
+    border: 1px solid deepskyblue;
+    width: 54.5%;
+    margin-left: 48px;
+    border-radius: 20px;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.DetailsFather button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+    position: relative;
+    bottom: -10px;
+    right: -410px;
+    background: deepskyblue;
+    border: none;
+    border-top-left-radius: 10px;
+    height: 30px;
+    color: white;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.details {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    width: 100%;
+}
+
+.details div {
+    background: deepskyblue;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    min-height: 149px;
 }

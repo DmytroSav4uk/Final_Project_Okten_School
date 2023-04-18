@@ -170,7 +170,7 @@
     margin-bottom: 200px;
 }
 
-.registerForm span{
+.span{
     padding: 10px;
     color: red;
     background: deepskyblue;
@@ -184,4 +184,8 @@
     color: white;
     padding: 10px;
     border-radius: 10px;
+}
+
+.submitBtn:disabled{
+    background: #006d91;
 }

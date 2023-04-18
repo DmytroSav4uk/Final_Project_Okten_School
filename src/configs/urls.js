@@ -12,7 +12,8 @@ const urls = {
             getAllUsers: '/admin/users',
             userRegister:'/admin/users/reg',
             userActivate:'/admin/activate',
-            recreateToken:'/admin/users/recreate'
+            recreateToken:'/admin/users/re_token',
+            deleteUser:'/admin/delete'
         },
 
     paid: {
