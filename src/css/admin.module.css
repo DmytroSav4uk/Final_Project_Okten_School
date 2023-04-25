@@ -7,7 +7,6 @@
     height: 60px;
 }
 
-
 .button {
     background: deepskyblue;
     border-radius: 10px;
@@ -19,6 +18,9 @@
     display: grid;
     align-items: center;
     border: 2px solid deepskyblue;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
 }
 
 .button h1 {
@@ -37,7 +39,6 @@
     flex-direction: column;
     align-items: center;
 
-
     position: fixed;
     background: white;
     width: 500px;
@@ -48,10 +49,11 @@
     z-index: 2;
     top: 100px;
     left: 33%;
-
 }
 
-
+.userForm p{
+    margin: 2px;
+}
 
 .black{
     top: 1px;
@@ -62,7 +64,6 @@
     z-index: 1;
 }
 
-
 .registerForm{
     display: flex;
     width: 100%;
@@ -70,7 +71,6 @@
     justify-content: center;
     align-items: center;
 }
-
 
 .registerForm input{
     width: 50%;
@@ -106,7 +106,6 @@
     cursor: pointer;
 }
 
-
 .wrap{
     margin: 0;
     padding: 0;
@@ -115,7 +114,6 @@
     align-items: center;
     min-height: 100vh;
     font-family: 'Jost', sans-serif;
-
 }
 
 .main{
@@ -143,6 +141,13 @@
     outline: none;
     border-radius: 5px;
 }
+
+.userForm p {
+    color: white;
+    font-family: Calibri;
+    font-weight: bold;
+}
+
 
 .main button{
     width: 60%;
@@ -179,7 +184,7 @@
     font-weight: bolder;
 }
 
-.successMesage{
+.successMessage{
     background: deepskyblue;
     color: white;
     padding: 10px;
@@ -188,4 +193,55 @@
 
 .submitBtn:disabled{
     background: #006d91;
+}
+
+.field{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    margin-left:5px ;
+}
+
+.field div{
+    width: 50%
+}
+
+.field input{
+    width: 219px;
+    height: 20px;
+    background: #e0dede;
+    justify-content: center;
+    display: flex;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+
+
+.controlButtons{
+    border: 1px solid deepskyblue;
+    border-radius: 10px;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 49px;
+    padding: 10px;
+}
+
+.statistics{
+    margin-left: 49px;
+    background: deepskyblue;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    width: fit-content;
 }

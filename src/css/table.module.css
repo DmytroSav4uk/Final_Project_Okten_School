@@ -60,16 +60,39 @@
     background: deepskyblue;
 }
 
+
+@keyframes spinner {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
 .reset {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 25px;
-    background: deepskyblue;
+
     color: white;
     cursor: pointer;
     border-radius: 10px;
+    max-width: 50px;
+
 }
+
+.spinning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    max-width: 50px;
+    animation: spinner .9s linear infinite;
+}
+
 
 .paragraphs {
     border: 2px solid deepskyblue;
@@ -90,7 +113,6 @@
 }
 
 .form div {
-
     display: flex;
     justify-content: center;
 
@@ -160,6 +182,13 @@
     padding-left: 16px;
     padding-right: 16px;
     width: 170px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    border-radius: 20px 20px 0 0;
+}
+
+.ordering div:hover {
+  background: rgba(224, 224, 224, 0.43);
 }
 
 .smallAlign {
@@ -211,7 +240,7 @@
 }
 
 .message {
-    border: 1px solid black;
+    border: 1px solid deepskyblue;
     width: 25%;
     margin-left: 48px;
     margin-top: 10px;
@@ -220,8 +249,25 @@
     border-radius: 10px;
 }
 
+.message div{
+    margin-top: 10px;
+    background: deepskyblue;
+    width: 50%;
+    border-radius: 10px;
+    font-family: Calibri;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.message div p{
+    font-size: 19px;
+   margin-left: 10px;
+}
+
 .comments {
-    border: 1px solid black;
+    border: 1px solid deepskyblue;
     width: 25%;
     margin-left: 48px;
     margin-top: 10px;
@@ -230,9 +276,36 @@
     border-radius: 10px;
 
     display: flex;
+
+    align-items: center;
     flex-direction: column;
+    overflow: hidden;
 }
 
+.comments button{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+    background: deepskyblue;
+    border: none;
+    border-radius: 0 0 10px 10px;
+    height: 30px;
+    color: white;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.comments button:disabled{
+    background: rgb(0, 124, 171);
+}
+
+.DetailsFather button:disabled{
+    background: rgb(0, 124, 171);
+}
 
 .DetailsFather {
     margin-top: 10px;
@@ -241,7 +314,7 @@
     width: 54.5%;
     margin-left: 48px;
     border-radius: 20px;
-    padding: 10px;
+    padding: 10px 10px 0;
 
     display: flex;
     flex-direction: column;
@@ -255,12 +328,13 @@
     align-items: center;
 
     padding: 20px;
-    position: relative;
-    bottom: -10px;
-    right: -410px;
+    margin-top: 10px;
+
     background: deepskyblue;
     border: none;
-    border-top-left-radius: 10px;
+
+    border-radius: 10px 10px 0 0;
+
     height: 30px;
     color: white;
     font-weight: bold;
@@ -273,9 +347,15 @@
     justify-content: space-around;
     align-items: start;
     width: 100%;
+    height: fit-content;
 }
 
 .details div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
     background: deepskyblue;
     color: white;
     font-weight: bold;
@@ -284,4 +364,30 @@
     border-radius: 10px;
     margin-top: 10px;
     min-height: 149px;
+    min-width: 150px;
+}
+
+.details p {
+    margin: 5px;
+}
+
+.statusDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: deepskyblue;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+    margin-top: 10px;
+    width: 400px;
+
+    max-height: 20px;
+    gap: 20px;
+}
+
+.statusDiv p {
+    margin: 0;
+
 }

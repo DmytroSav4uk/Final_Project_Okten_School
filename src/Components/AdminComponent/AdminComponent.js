@@ -6,7 +6,9 @@ import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi"
 
 import {adminActions} from "../../Redux/slices/admin.slice";
+
 import css from "../../css/admin.module.css"
+
 import {formValidator} from "../../validators/form.validator";
 
 const AdminComponent = () => {
@@ -15,13 +17,15 @@ const AdminComponent = () => {
     const navigate = useNavigate();
 
     const {usersArr} = useSelector(state => state.adminReducer);
+    //const {statisticsArr} = useSelector(state => state.adminReducer);
+    const {userStatistics} = useSelector(state => state.adminReducer);
     const {registerData} = useSelector(state => state.adminReducer);
     const {recreatedActivationLink} = useSelector(state => state.adminReducer);
 
-    let [successMesage, setSuccessMessage] = useState(false);
+    let [successMessage, setSuccessMessage] = useState(false);
     let [userForm, setUserForm] = useState(false);
-    let [confirmDiv, setConfirmDiv] = useState(false)
-    let [deleteSuccess, setDeleteSuccess] = useState(false)
+    let [confirmDiv, setConfirmDiv] = useState(false);
+    let [confirmId, setConfirmId] = useState(null);
 
     const {register, reset, handleSubmit, formState: {isValid, errors}} = useForm({
         resolver: joiResolver(formValidator),
@@ -30,33 +34,6 @@ const AdminComponent = () => {
 
     let user = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
 
-    const ExpandedComponent = ({data}) =>
-        <>
-            {data.is_active ? null : <button onClick={() => {
-                createActivationLink(data.id)
-            }}>create activation link</button>}
-
-            <button onClick={() => {
-                setConfirmDiv(true)
-            }}>delete user
-            </button>
-            {confirmDiv ?
-                <div>
-                    <p>are you sure?</p>
-                    <button onClick={() => {
-                        deleteUser(data.id)
-                    }}>yes!
-                    </button>
-                    <button onClick={() => {
-                        setConfirmDiv(false)
-                    }}>no..
-                    </button>
-                </div>
-                : null}
-
-            {deleteSuccess ? <p>user deleted,please reload the page</p> : null}
-        </>
-    ;
 
     const columns = [
         {
@@ -83,10 +60,8 @@ const AdminComponent = () => {
 
         {
             name: "is activated",
-            selector: row => row.is_active ? 'yes' : "no"
+            selector: row => row.is_active ? 'yes' : row.is_blocked ? <span style={{color: 'red'}}>blocked</span> : "no"
         }
-
-
     ]
 
     useEffect(() => {
@@ -123,30 +98,108 @@ const AdminComponent = () => {
     }
 
 
-    const deleteUser = async (id) => {
-       let response = await dispatch(adminActions.deleteUser(id))
-
-        if (response){
-            setDeleteSuccess(true)
-        }
+    const deleteUser = (id) => {
+        dispatch(adminActions.deleteUser(id))
 
         setTimeout(() => {
-            setSuccessMessage(false);
-            setConfirmDiv(false);
-            setDeleteSuccess(false);
-        }, 5000)
+            dispatch(adminActions.getAllUsers())
+        }, 1000)
     }
+
+    const blockUser = (id) => {
+        dispatch(adminActions.blockUser(id))
+
+        setTimeout(() => {
+            dispatch(adminActions.getAllUsers())
+        }, 1000)
+
+
+    };
+
+    const unblockUser = (id) => {
+        dispatch(adminActions.unblockUser(id))
+
+        setTimeout(() => {
+            dispatch(adminActions.getAllUsers())
+        }, 1000)
+
+    }
+
+    let [statisticsId, setStatisticsId] = useState(null);
+    const getUserStatistics = (id) => {
+        dispatch(adminActions.getUserStatistics(id))
+        setStatisticsId(id)
+    }
+
+
+    const ExpandedComponent = ({data}) =>
+        <>
+            <div className={css.controlButtons}>
+                <div style={{display: 'flex'}}>
+                    {data.is_active || data.is_blocked ? null : <button className={css.button} onClick={() => {
+                        createActivationLink(data.id)
+                    }}>create activation link</button>}
+
+                    <button className={css.button} onClick={() => {
+                        setConfirmDiv(true)
+                        setConfirmId(data.id)
+                    }}>delete user
+                    </button>
+
+                    {data.is_blocked ?
+                        <button className={css.button} onClick={() => unblockUser(data.id)}>unblock user</button> :
+                        <button className={css.button} onClick={() => blockUser(data.id)}>block user</button>}
+                    <button className={css.button} onClick={() => getUserStatistics(data.id)}>get Statistics</button>
+                </div>
+
+                <div>
+                    {confirmDiv && data.id === confirmId ?
+                        <div>
+                            <div>
+                                <p style={{textAlign: 'center'}}>are you sure?</p>
+                            </div>
+
+                            <div style={{display: 'flex'}}>
+                                <button className={css.button} onClick={() => {
+                                    deleteUser(data.id)
+                                }}>yes!
+                                </button>
+                                <button className={css.button} onClick={() => {
+                                    setConfirmDiv(false)
+                                }}>no...
+                                </button>
+                            </div>
+                        </div>
+                        : null}
+                </div>
+            </div>
+
+            {userStatistics && statisticsId === data.id ?
+
+                <div className={css.statistics}>
+                    <p>STATISTICS</p>
+                    <p>NEW: {userStatistics.statuses?.newCount}</p>
+                    <p>IN WORK: {userStatistics.statuses?.inWorkCount}</p>
+                    <p>DOUBLE: {userStatistics.statuses?.doubleCount}</p>
+                    <p>AGREE: {userStatistics.statuses?.agreeCount}</p>
+                    <p>DISAGREE: {userStatistics.statuses?.disagreeCount}</p>
+                    <p>Total: {userStatistics.totalCount}</p>
+                </div>
+                : null}
+        </>;
+
+    //****************************************************
 
     return (
         <>
             <div className={css.header}>
-                <div onClick={goToTables} className={css.button}>
+                <div style={{height:'30px'}} onClick={goToTables} className={css.button}>
                     <h1>
                         back to tables
                     </h1>
                 </div>
 
-                <div onClick={showForm} className={css.button}>
+                <div style={{height:'30px'}} onClick={showForm} className={css.button}>
                     <h1>
                         add User
                     </h1>
@@ -193,8 +246,8 @@ const AdminComponent = () => {
                                 }}>click to copy url</p>
                                 : null}
 
-                            {successMesage ?
-                                <p className={css.successMesage} style={{textAlign: "center"}}>url copied <br/>now send
+                            {successMessage ?
+                                <p className={css.successMessage} style={{textAlign: "center"}}>url copied <br/>now send
                                     it to user so he could activate account</p>
                                 : null}
                         </div>

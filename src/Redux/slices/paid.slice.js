@@ -3,8 +3,11 @@ import {paidService} from "../../services/paid.service";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 
+
 const initialState = {
     paidArr: [],
+    groupsArr: [],
+    excel:null,
     paidById: null,
     firstPage: 1,
     currentPage: 1,
@@ -26,19 +29,17 @@ const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
         }
     })
 
-
 const getPaidById = createAsyncThunk('paidSlice/getPaidById',
 
     async (id, {rejectWithValue}) => {
-
         try {
             const {data} = await paidService.getPaidById(id)
+            localStorage.setItem('editPaid', JSON.stringify(data))
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
         }
     })
-
 
 const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
@@ -46,6 +47,7 @@ const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
         try {
             const {data} = await paidService.getPaidById(id)
+            localStorage.setItem('editPaid', JSON.stringify(data))
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
@@ -54,16 +56,39 @@ const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
 const patchPaidById = createAsyncThunk('paidSlice/patchPaidById',
 
-    async (url, {rejectWithValue}) => {
+    async (editData, {rejectWithValue}) => {
 
         try {
-            const {data} = await paidService.changePaidByUrl(url)
+            const {data} = await paidService.changePaidById(editData)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    });
+
+const getAllGroups = createAsyncThunk('paidSlice/getAllGroups',
+
+    async (_, {rejectWithValue}) => {
+
+        try {
+            const {data} = await paidService.getAllGroups()
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
         }
     })
 
+const createGroup = createAsyncThunk('paidSlice/createGroup',
+
+    async (name, {rejectWithValue}) => {
+
+        try {
+            const {data} = await paidService.createGroup(name)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    })
 
 const closeEditing = createAsyncThunk('paidSlice/closeEditing',
 
@@ -75,6 +100,20 @@ const closeEditing = createAsyncThunk('paidSlice/closeEditing',
             e.rejectWithValue(e.response.data)
         }
     })
+
+const getExcel = createAsyncThunk('paidSlice/getExcel',
+
+    async (query, {rejectWithValue}) => {
+
+        try {
+            const {data} = await paidService.getExcel(query)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    })
+
+
 
 const paidSlice = createSlice({
 
@@ -120,8 +159,25 @@ const paidSlice = createSlice({
                 state.showEdit = false
             })
 
+            .addCase(getAllGroups.fulfilled, (state, action) => {
+                state.groupsArr = action.payload
+            })
+
             .addCase(closeEditing.fulfilled, (state, action) => {
                 state.showEdit = false
+            })
+
+            .addCase(getExcel.fulfilled, (state, action) => {
+                //state.excel = action.payload
+
+                const url = window.URL.createObjectURL(new Blob([action.payload]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `${Date.now()}.xls`);
+                document.body.appendChild(link);
+                link.click();
+
+
             })
 
 
@@ -134,7 +190,10 @@ const paidActions = {
     getPaidById,
     patchPaidById,
     getPaidForComment,
-    closeEditing
+    closeEditing,
+    getAllGroups,
+    createGroup,
+    getExcel
 }
 
 

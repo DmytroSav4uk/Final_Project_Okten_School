@@ -8,7 +8,7 @@ const initialState = {
     signUpData: {},
     error: false,
     redirect: false,
-    isLogged: false
+  //  isLogged: false
 }
 
 const signIn = createAsyncThunk('signInUpSlice/signIn',
@@ -35,7 +35,7 @@ const signUpInSlice = createSlice({
                 state.error = false
                 state.signInData = action.payload
                 state.redirect = true
-                state.isLogged = true
+            //    state.isLogged = true
             })
 
             .addCase(signIn.rejected, (state, action) => {

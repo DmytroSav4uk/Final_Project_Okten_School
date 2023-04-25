@@ -12,25 +12,7 @@ import {loginValidator} from "../../validators/login.validator";
 
 const GetStartedComponent = () => {
 
-
     let tokens = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
-
-    if (tokens){
-        const refreshDecoded = jwt_decode(tokens?.refresh_token) ;
-        const refreshExpired = dayjs.unix(refreshDecoded.exp).diff(dayjs()) < 1;
-
-        if (refreshExpired){
-            localStorage.removeItem('currentUser')
-        }
-    }
-
-
-
-
-    const {register, handleSubmit, reset, formState:{ isValid,errors}} = useForm({
-        resolver: joiResolver(loginValidator),
-        mode: 'onChange'
-    })
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,7 +22,24 @@ const GetStartedComponent = () => {
 
     let [loginState, setLoginState] = useState(css.login);
 
+    const {register, handleSubmit, reset, formState: {isValid, errors}} = useForm({
+        resolver: joiResolver(loginValidator),
+        mode: 'onChange'
+    })
+
     useEffect(() => {
+
+        if (tokens) {
+            const refreshDecoded = jwt_decode(tokens?.refresh_token);
+            const refreshExpired = dayjs.unix(refreshDecoded.exp).diff(dayjs()) < 1;
+
+            if (refreshExpired) {
+                localStorage.removeItem('currentUser')
+            }else {
+                navigate("/tables?page=1&order=-id")
+            }
+        }
+
         if (redirect) {
             navigate('/tables?page=1&order=-id')
         }
@@ -59,7 +58,6 @@ const GetStartedComponent = () => {
         reset()
     };
 
-
     return (
         <div className={css.wrap}>
             <div className={css.main}>
@@ -70,10 +68,13 @@ const GetStartedComponent = () => {
                     <form onSubmit={handleSubmit(submit)}>
                         <label onClick={changeLoginState} htmlFor={css.chk} aria-hidden={"true"}>Login</label>
                         <input type={"email"} name={"email"} placeholder={"Email"} {...register('email')}/>
-                        {errors.email && <span style={{textAlign:"center"}}>{errors.email.message}</span>}
                         <input type={"password"} name={"pswd"} placeholder={"Password"} {...register('password')} />
-                        {errors.password && <span style={{textAlign:"center"}}>{errors.password.message}</span>}
-                        <button disabled={!isValid}  type={"submit"}>Login</button>
+                        {errors.password || errors.email ?
+                            <div style={{textAlign: "center",width:'100%' ,color:'red'}}>
+                                <span style={{width:'100%',margin:'0'}}>form is invalid</span>
+                            </div>:null
+                        }
+                        <button disabled={!isValid} type={"submit"}>Login</button>
                     </form>
                 </div>
             </div>

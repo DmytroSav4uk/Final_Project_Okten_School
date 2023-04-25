@@ -4,9 +4,11 @@ import {adminService} from "../../services/admin.service";
 
 const initialState = {
     usersArr: [],
+    statisticsArr:[],
+    userStatistics:[],
     registerData: [],
     recreatedActivationLink: null
-    }
+}
 
 const getAllUsers = createAsyncThunk('adminSlice/getAllUsers',
 
@@ -20,6 +22,29 @@ const getAllUsers = createAsyncThunk('adminSlice/getAllUsers',
         }
     });
 
+const getStatistics = createAsyncThunk('adminSlice/getStatistics',
+
+    async (_, {rejectWithValue}) => {
+
+        try {
+            const {data} = await adminService.getStatistics()
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    });
+
+const getUserStatistics = createAsyncThunk('adminSlice/getUserStatistics',
+
+    async (id, {rejectWithValue}) => {
+
+        try {
+            const {data} = await adminService.getUserStatistics(id)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    });
 
 const registerUser = createAsyncThunk('adminSlice/registerUser',
 
@@ -45,7 +70,6 @@ const activateUser = createAsyncThunk('adminSlice/activateUser',
         }
     });
 
-
 const recreateActivationLink = createAsyncThunk('adminSlice/activateUser',
 
     async (id, {rejectWithValue}) => {
@@ -61,7 +85,6 @@ const recreateActivationLink = createAsyncThunk('adminSlice/activateUser',
 const deleteUser = createAsyncThunk('adminSlice/deleteUser',
 
     async (id, {rejectWithValue}) => {
-
         try {
             const {data} = await adminService.deleteUser(id)
             return data;
@@ -70,6 +93,30 @@ const deleteUser = createAsyncThunk('adminSlice/deleteUser',
         }
     });
 
+const blockUser = createAsyncThunk('adminSlice/blockUser',
+
+    async (id, {rejectWithValue}) => {
+
+        try {
+            const {data} = await adminService.blockUser(id)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    });
+
+
+const unblockUser = createAsyncThunk('adminSlice/unblockUser',
+
+    async (id, {rejectWithValue}) => {
+
+        try {
+            const {data} = await adminService.unblockUser(id)
+            return data;
+        } catch (e) {
+            e.rejectWithValue(e.response.data)
+        }
+    });
 
 const adminSlice = createSlice({
 
@@ -81,7 +128,12 @@ const adminSlice = createSlice({
             .addCase(getAllUsers.fulfilled, (state, action) => {
                 state.usersArr = action.payload
             })
-
+            .addCase(getStatistics.fulfilled, (state, action) => {
+                state.statisticsArr = action.payload
+            })
+            .addCase(getUserStatistics.fulfilled, (state, action) => {
+                state.userStatistics = action.payload
+            })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.registerData = action.payload
                 state.createUrl = true
@@ -89,18 +141,21 @@ const adminSlice = createSlice({
             .addCase(recreateActivationLink.fulfilled, (state, action) => {
                 state.recreatedActivationLink = action.payload
             })
-    });
+});
 
 const {reducer: adminReducer} = adminSlice;
 
 const adminActions = {
     getAllUsers,
+    getStatistics,
+    getUserStatistics,
     registerUser,
     activateUser,
     recreateActivationLink,
-    deleteUser
+    deleteUser,
+    blockUser,
+    unblockUser
 }
-
 
 export {
     adminActions,
