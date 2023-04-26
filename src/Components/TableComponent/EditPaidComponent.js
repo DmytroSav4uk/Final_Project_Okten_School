@@ -8,7 +8,7 @@ import css from "../../css/admin.module.css"
 import {joiResolver} from "@hookform/resolvers/joi";
 import {editValidator} from "../../validators/edit.validator";
 import {useEffect, useState} from "react";
-// import PhoneInput from "react-phone-number-input";
+//import PhoneInput from "react-phone-number-input";
 
 
 const EditPaidComponent = ({preloadedValues}) => {
@@ -30,17 +30,20 @@ const EditPaidComponent = ({preloadedValues}) => {
 
     const submit = (data) => {
 
+
+        console.log(data)
         let json = JSON.stringify(data)
 
         let newJSON = json.replace(`"phone":"${data.phone}"`, `"phone":"+${data.phone}"`)
 
         let correctedData = JSON.parse(newJSON);
 
-        dispatch(paidActions.patchPaidById(correctedData))
-
-        setTimeout(() => {
-            dispatch(paidActions.getAllPaid(currentUrl))
-        }, 1000)
+        console.log(correctedData)
+        // dispatch(paidActions.patchPaidById(correctedData))
+        //
+        // setTimeout(() => {
+        //     dispatch(paidActions.getAllPaid(currentUrl))
+        // }, 1000)
     }
 
     const closeEdit = () => {
@@ -76,7 +79,7 @@ const EditPaidComponent = ({preloadedValues}) => {
                         <div>
                             <p>Group</p>
                             {showAddGroup ? <input placeholder={'group'} name={'group'} {...register('group')}/>
-                                : <select defaultValue={preloadedValues?.group?.name }
+                                : <select defaultValue={preloadedValues?.group?.name}
                                           style={{
                                               width: '219.33px',
                                               height: "29.5px",
@@ -160,6 +163,7 @@ const EditPaidComponent = ({preloadedValues}) => {
                             <Controller control={control}  defaultValue={preloadedValues?.phone? preloadedValues?.phone : '380'} name={'phone'} render={
                                 ({field: {ref, ...field}}) => (
                                     <PhoneInput
+                                        countryCodeEditable={false}
                                         disableDropdown={true}
                                         containerStyle={{
                                             width: "229px",
@@ -183,16 +187,21 @@ const EditPaidComponent = ({preloadedValues}) => {
                                             border: 'none',
                                             padding: '0',
                                             minWidth: '219px'
-                                        }} country={'ua'} {...field} />
+                                        }} country={'ua'}  {...field} />
                                 )}/>
 
-                            {/*<PhoneInput*/}
-                            {/*     onChange={value => console.log('')}*/}
-                            {/*    value={preloadedValues?.phone}*/}
-                            {/*    limitMaxLength={true} countries={['UA']} defaultCountry={"UA"}*/}
-                            {/*    international={true}*/}
-                            {/*     {...register('phone')}*/}
-                            {/*/>*/}
+
+                            {/*<Controller control={control} defaultValue={preloadedValues?.phone ? preloadedValues?.phone : '380'}*/}
+                            {/*            name={'phone'} render={*/}
+                            {/*    ({field: {ref,name,value, ...field}}) =>(*/}
+                            {/*        <PhoneInput*/}
+                            {/*            name={'phone'}*/}
+                            {/*            value={value}*/}
+                            {/*            limitMaxLength={true} countries={['UA']} defaultCountry={"UA"}*/}
+                            {/*            international={true}*/}
+                            {/*            {...field}*/}
+                            {/*        />*/}
+                            {/*    )}/>*/}
 
 
                             {/*<input type={'tel'} maxLength={13}*/}
