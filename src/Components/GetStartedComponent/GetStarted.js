@@ -43,7 +43,7 @@ const GetStartedComponent = () => {
         if (redirect) {
             navigate('/tables?page=1&order=-id')
         }
-    }, [redirect, navigate])
+    }, [redirect, navigate,tokens])
 
     const changeLoginState = () => {
         if (loginState === css.login) {

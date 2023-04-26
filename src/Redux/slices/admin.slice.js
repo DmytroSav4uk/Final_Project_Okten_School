@@ -12,7 +12,7 @@ const initialState = {
 
 const getAllUsers = createAsyncThunk('adminSlice/getAllUsers',
 
-    async (_, {rejectWithValue}) => {
+    async (_, {__}) => {
 
         try {
             const {data} = await adminService.getAllUsers()
@@ -24,7 +24,7 @@ const getAllUsers = createAsyncThunk('adminSlice/getAllUsers',
 
 const getStatistics = createAsyncThunk('adminSlice/getStatistics',
 
-    async (_, {rejectWithValue}) => {
+    async (_, {__}) => {
 
         try {
             const {data} = await adminService.getStatistics()
@@ -36,7 +36,7 @@ const getStatistics = createAsyncThunk('adminSlice/getStatistics',
 
 const getUserStatistics = createAsyncThunk('adminSlice/getUserStatistics',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {__}) => {
 
         try {
             const {data} = await adminService.getUserStatistics(id)
@@ -48,7 +48,7 @@ const getUserStatistics = createAsyncThunk('adminSlice/getUserStatistics',
 
 const registerUser = createAsyncThunk('adminSlice/registerUser',
 
-    async (inputData, {rejectWithValue}) => {
+    async (inputData, {__}) => {
 
         try {
             const {data} = await adminService.registerUser(inputData)
@@ -60,7 +60,7 @@ const registerUser = createAsyncThunk('adminSlice/registerUser',
 
 const activateUser = createAsyncThunk('adminSlice/activateUser',
 
-    async (inputData, {rejectWithValue}) => {
+    async (inputData, {__}) => {
 
         try {
             const {data} = await adminService.activateUser(inputData)
@@ -72,7 +72,7 @@ const activateUser = createAsyncThunk('adminSlice/activateUser',
 
 const recreateActivationLink = createAsyncThunk('adminSlice/activateUser',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {__}) => {
 
         try {
             const {data} = await adminService.recreateToken(id)
@@ -84,7 +84,7 @@ const recreateActivationLink = createAsyncThunk('adminSlice/activateUser',
 
 const deleteUser = createAsyncThunk('adminSlice/deleteUser',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {__}) => {
         try {
             const {data} = await adminService.deleteUser(id)
             return data;
@@ -95,7 +95,7 @@ const deleteUser = createAsyncThunk('adminSlice/deleteUser',
 
 const blockUser = createAsyncThunk('adminSlice/blockUser',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {__}) => {
 
         try {
             const {data} = await adminService.blockUser(id)
@@ -108,7 +108,7 @@ const blockUser = createAsyncThunk('adminSlice/blockUser',
 
 const unblockUser = createAsyncThunk('adminSlice/unblockUser',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {__}) => {
 
         try {
             const {data} = await adminService.unblockUser(id)

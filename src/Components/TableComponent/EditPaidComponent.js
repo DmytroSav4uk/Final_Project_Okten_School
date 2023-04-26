@@ -1,6 +1,6 @@
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import PhoneInput from 'react-phone-input-2'
+ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
 import {paidActions} from "../../Redux/slices/paid.slice";
@@ -8,6 +8,7 @@ import css from "../../css/admin.module.css"
 import {joiResolver} from "@hookform/resolvers/joi";
 import {editValidator} from "../../validators/edit.validator";
 import {useEffect, useState} from "react";
+// import PhoneInput from "react-phone-number-input";
 
 
 const EditPaidComponent = ({preloadedValues}) => {
@@ -29,7 +30,13 @@ const EditPaidComponent = ({preloadedValues}) => {
 
     const submit = (data) => {
 
-        dispatch(paidActions.patchPaidById(data))
+        let json = JSON.stringify(data)
+
+        let newJSON = json.replace(`"phone":"${data.phone}"`, `"phone":"+${data.phone}"`)
+
+        let correctedData = JSON.parse(newJSON);
+
+        dispatch(paidActions.patchPaidById(correctedData))
 
         setTimeout(() => {
             dispatch(paidActions.getAllPaid(currentUrl))
@@ -58,7 +65,6 @@ const EditPaidComponent = ({preloadedValues}) => {
         }, 1000)
     };
 
-
     return (
         <div className={css.black}>
             <div className={css.registerForm}>
@@ -69,8 +75,8 @@ const EditPaidComponent = ({preloadedValues}) => {
                     <div className={css.field}>
                         <div>
                             <p>Group</p>
-                            {showAddGroup ? <input placeholder={'group'} {...register('group')}/>
-                                : <select defaultValue={preloadedValues?.group ? preloadedValues.group : " "}
+                            {showAddGroup ? <input placeholder={'group'} name={'group'} {...register('group')}/>
+                                : <select defaultValue={preloadedValues?.group?.name }
                                           style={{
                                               width: '219.33px',
                                               height: "29.5px",
@@ -82,7 +88,7 @@ const EditPaidComponent = ({preloadedValues}) => {
                                 </select>}
 
                             {showAddGroup ?
-                                <div style={{display: 'flex',width:'100%'}}>
+                                <div style={{display: 'flex', width: '100%'}}>
                                     <div style={{
                                         height: '20px',
                                         width: '100%',
@@ -99,14 +105,12 @@ const EditPaidComponent = ({preloadedValues}) => {
                                     </div>
                                     <button style={{
                                         height: '20px',
-                                        width:"50px",
+                                        width: "50px",
                                         borderTopLeftRadius: '0',
                                         borderBottomLeftRadius: '0',
                                     }} type={'submit'}>add
                                     </button>
                                 </div>
-
-
                                 :
                                 <div style={{
                                     height: '20px',
@@ -153,35 +157,48 @@ const EditPaidComponent = ({preloadedValues}) => {
                     <div className={css.field}>
                         <div>
                             <p>Phone</p>
-                            <Controller control={control} defaultValue={preloadedValues.phone} name={'phone'} render={
+                            <Controller control={control}  defaultValue={preloadedValues?.phone? preloadedValues?.phone : '380'} name={'phone'} render={
                                 ({field: {ref, ...field}}) => (
-                                    <PhoneInput containerStyle={{
-                                        width: "229px",
-                                        height: "30px",
-                                        background: "#e0dede",
-                                        padding: "5px",
-                                        border: "none",
-                                        outline: "none",
-                                        borderRadius: "5px",
-                                        marginLeft: '5px'
-                                    }}
-
-                                                buttonStyle={{
-                                                    border: "none",
-                                                    background: 'none',
-                                                    position: 'relative',
-                                                    top: '-50px',
-                                                    left: '37px'
-                                                }}
-
-                                                inputStyle={{
-                                                    background: "none",
-                                                    border: 'none',
-                                                    padding: '0',
-                                                    minWidth: '219px'
-
-                                                }} country={'ua'}{...field}/>
+                                    <PhoneInput
+                                        disableDropdown={true}
+                                        containerStyle={{
+                                            width: "229px",
+                                            height: "30px",
+                                            background: "#e0dede",
+                                            padding: "5px",
+                                            border: "none",
+                                            outline: "none",
+                                            borderRadius: "5px",
+                                            marginLeft: '5px'
+                                        }}
+                                        buttonStyle={{
+                                            border: "none",
+                                            background: 'none',
+                                            position: 'relative',
+                                            top: '-55px',
+                                            left: '37px'
+                                        }}
+                                        inputStyle={{
+                                            background: "none",
+                                            border: 'none',
+                                            padding: '0',
+                                            minWidth: '219px'
+                                        }} country={'ua'} {...field} />
                                 )}/>
+
+                            {/*<PhoneInput*/}
+                            {/*     onChange={value => console.log('')}*/}
+                            {/*    value={preloadedValues?.phone}*/}
+                            {/*    limitMaxLength={true} countries={['UA']} defaultCountry={"UA"}*/}
+                            {/*    international={true}*/}
+                            {/*     {...register('phone')}*/}
+                            {/*/>*/}
+
+
+                            {/*<input type={'tel'} maxLength={13}*/}
+                            {/*       defaultValue={prefix + preloadedValues?.phone || '+380'} placeholder={'phone'} {...register('phone')}/>*/}
+
+
                         </div>
                         <div>
                             <p>Email</p>

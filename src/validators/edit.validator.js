@@ -12,7 +12,7 @@ const editValidator = Joi.object({
     email: Joi.string().email({tlds: {allow: false}}).required().messages({
         'string.pattern.base': 'wrong data'
     }),
-    phone: Joi.number().required().messages({
+    phone: Joi.string().regex(/^380\d+$/).required().messages({
         'string.pattern.base': 'wrong data'
     }),
     sum: Joi.number().min(0).max(50000).required().messages({

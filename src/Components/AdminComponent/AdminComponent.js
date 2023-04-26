@@ -6,9 +6,7 @@ import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi"
 
 import {adminActions} from "../../Redux/slices/admin.slice";
-
 import css from "../../css/admin.module.css"
-
 import {formValidator} from "../../validators/form.validator";
 
 const AdminComponent = () => {

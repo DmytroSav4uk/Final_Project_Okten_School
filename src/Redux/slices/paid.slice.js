@@ -19,7 +19,7 @@ const initialState = {
 
 const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
 
-    async (page, {rejectWithValue}) => {
+    async (page, {_}) => {
 
         try {
             const {data} = await paidService.getAllPaid(page)
@@ -31,7 +31,7 @@ const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
 
 const getPaidById = createAsyncThunk('paidSlice/getPaidById',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {_}) => {
         try {
             const {data} = await paidService.getPaidById(id)
             localStorage.setItem('editPaid', JSON.stringify(data))
@@ -43,7 +43,7 @@ const getPaidById = createAsyncThunk('paidSlice/getPaidById',
 
 const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
-    async (id, {rejectWithValue}) => {
+    async (id, {_}) => {
 
         try {
             const {data} = await paidService.getPaidById(id)
@@ -56,7 +56,7 @@ const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
 const patchPaidById = createAsyncThunk('paidSlice/patchPaidById',
 
-    async (editData, {rejectWithValue}) => {
+    async (editData, {_}) => {
 
         try {
             const {data} = await paidService.changePaidById(editData)
@@ -68,7 +68,7 @@ const patchPaidById = createAsyncThunk('paidSlice/patchPaidById',
 
 const getAllGroups = createAsyncThunk('paidSlice/getAllGroups',
 
-    async (_, {rejectWithValue}) => {
+    async (_, {__}) => {
 
         try {
             const {data} = await paidService.getAllGroups()
@@ -80,7 +80,7 @@ const getAllGroups = createAsyncThunk('paidSlice/getAllGroups',
 
 const createGroup = createAsyncThunk('paidSlice/createGroup',
 
-    async (name, {rejectWithValue}) => {
+    async (name, {_}) => {
 
         try {
             const {data} = await paidService.createGroup(name)
@@ -92,18 +92,18 @@ const createGroup = createAsyncThunk('paidSlice/createGroup',
 
 const closeEditing = createAsyncThunk('paidSlice/closeEditing',
 
-    async (_, {rejectWithValue}) => {
+    async (_, {__}) => {
 
         try {
             return true;
-        } catch (e) {
-            e.rejectWithValue(e.response.data)
+        } finally {
+
         }
     })
 
 const getExcel = createAsyncThunk('paidSlice/getExcel',
 
-    async (query, {rejectWithValue}) => {
+    async (query, {_}) => {
 
         try {
             const {data} = await paidService.getExcel(query)
@@ -122,7 +122,7 @@ const paidSlice = createSlice({
     reducers: {},
     extraReducers: builder =>
         builder
-            .addCase(getAllPaid.pending, (state, action) => {
+            .addCase(getAllPaid.pending, (state) => {
                 state.loading = true
                 state.rejected = false
                 state.success = false
@@ -136,7 +136,7 @@ const paidSlice = createSlice({
                 state.rejected = false
             })
 
-            .addCase(getAllPaid.rejected, (state, action) => {
+            .addCase(getAllPaid.rejected, (state) => {
                 state.loading = false
                 state.rejected = true
                 state.success = false
@@ -151,11 +151,11 @@ const paidSlice = createSlice({
                 state.paidById = action.payload
             })
 
-            .addCase(patchPaidById.fulfilled, (state, action) => {
+            .addCase(patchPaidById.fulfilled, (state) => {
                 state.showEdit = false
             })
 
-            .addCase(patchPaidById.rejected, (state, action) => {
+            .addCase(patchPaidById.rejected, (state) => {
                 state.showEdit = false
             })
 
@@ -163,7 +163,7 @@ const paidSlice = createSlice({
                 state.groupsArr = action.payload
             })
 
-            .addCase(closeEditing.fulfilled, (state, action) => {
+            .addCase(closeEditing.fulfilled, (state) => {
                 state.showEdit = false
             })
 

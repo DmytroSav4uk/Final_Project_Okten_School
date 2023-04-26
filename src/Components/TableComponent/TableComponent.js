@@ -81,7 +81,6 @@ const TableComponent = () => {
     let {currentPage} = useSelector(state => state.paidReducer);
     let {paidById} = useSelector(state => state.paidReducer);
     const {showEdit} = useSelector(state => state.paidReducer);
-    const {excel} = useSelector(state => state.paidReducer);
 
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
@@ -138,7 +137,7 @@ const TableComponent = () => {
                 navigate("/tables?page=" + currentPage + "&order=" + order
                 )
             } else {
-                navigate("/tables?page=" + currentPage + filter + "order=" + order)
+                navigate("/tables?page=" + currentPage + "&" + filter + "&order=" + order)
             }
 
         } else {
@@ -167,7 +166,7 @@ const TableComponent = () => {
             if (filter !== '') {
                 navigate("/tables?page=" + currentPage + "&order=" + order)
             } else {
-                navigate("/tables?page=" + currentPage + filter + "order=" + order)
+                navigate("/tables?page=" + currentPage + "&" + filter + "&order=" + order)
             }
 
         } else {

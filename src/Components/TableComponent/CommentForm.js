@@ -15,10 +15,16 @@ const CommentForm = ({show}) => {
     });
 
     const dispatch = useDispatch();
+    let url = window.location.search
 
     const commentSubmit = (data) => {
         dispatch(paidActions.patchPaidById(data))
         show(false)
+
+        setTimeout(() => {
+            dispatch(paidActions.getAllPaid(url))
+        }, 1000)
+
     }
 
     return (
