@@ -1,6 +1,6 @@
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
- import PhoneInput from 'react-phone-input-2'
+ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 
 import {paidActions} from "../../Redux/slices/paid.slice";
@@ -29,21 +29,11 @@ const EditPaidComponent = ({preloadedValues}) => {
     }, [dispatch])
 
     const submit = (data) => {
+        dispatch(paidActions.patchPaidById(data))
 
-
-        console.log(data)
-        let json = JSON.stringify(data)
-
-        let newJSON = json.replace(`"phone":"${data.phone}"`, `"phone":"+${data.phone}"`)
-
-        let correctedData = JSON.parse(newJSON);
-
-        console.log(correctedData)
-        // dispatch(paidActions.patchPaidById(correctedData))
-        //
-        // setTimeout(() => {
-        //     dispatch(paidActions.getAllPaid(currentUrl))
-        // }, 1000)
+        setTimeout(() => {
+            dispatch(paidActions.getAllPaid(currentUrl))
+        }, 1000)
     }
 
     const closeEdit = () => {
@@ -163,7 +153,6 @@ const EditPaidComponent = ({preloadedValues}) => {
                             <Controller control={control}  defaultValue={preloadedValues?.phone? preloadedValues?.phone : '380'} name={'phone'} render={
                                 ({field: {ref, ...field}}) => (
                                     <PhoneInput
-                                        countryCodeEditable={false}
                                         disableDropdown={true}
                                         containerStyle={{
                                             width: "229px",
@@ -187,7 +176,7 @@ const EditPaidComponent = ({preloadedValues}) => {
                                             border: 'none',
                                             padding: '0',
                                             minWidth: '219px'
-                                        }} country={'ua'}  {...field} />
+                                        }} country={'ua'}  {...field}/>
                                 )}/>
 
 
