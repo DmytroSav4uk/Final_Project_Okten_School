@@ -37,7 +37,6 @@ const getPaidById = createAsyncThunk('paidSlice/getPaidById',
     async (id, {_}) => {
         try {
             const {data} = await paidService.getPaidById(id)
-          //  localStorage.setItem('editPaid', JSON.stringify(data))
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
@@ -50,7 +49,6 @@ const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
         try {
             const {data} = await paidService.getPaidById(id)
-          //  localStorage.setItem('editPaid', JSON.stringify(data))
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
