@@ -6,8 +6,8 @@ import {useNavigate} from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
-import {paidActions} from "../../Redux/slices/paid.slice";
-import css from "../../css/table.module.css";
+import {paidActions} from "../../redux/slices/paid.slice";
+import css from "./table.module.css";
 import loadingGif from "../../icons/loading.gif";
 import resetPic from "../../icons/reset.png";
 import excell from "../../icons/excell.png";
@@ -78,9 +78,12 @@ const TableComponent = () => {
     const {loading} = useSelector(state => state.paidReducer);
     const {success} = useSelector(state => state.paidReducer);
 
+
     let {currentPage} = useSelector(state => state.paidReducer);
     let {paidById} = useSelector(state => state.paidReducer);
     const {showEdit} = useSelector(state => state.paidReducer);
+    const {updatedComments} = useSelector(state => state.paidReducer);
+    const {idArr} = useSelector(state => state.paidReducer);
 
     let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
     let [filter, setFilter] = useState(null);
@@ -93,11 +96,19 @@ const TableComponent = () => {
 
     useEffect(() => {
 
-        dispatch(paidActions.getAllPaid(search))
+
+
+        if(idArr.length ===0){
+            dispatch(paidActions.getAllPaid(search))
+        }
+
+
+        if (search.includes('&My=true')) {
+            setChecked(true)
+        }
 
         if (filterWrittenInURL && search.length > 8) {
             setPaginateForFilteredData(true);
-
             setFilter(getStringBetween(search, `page=${currentPage}`, 'order'))
             setFilterWrittenInURL(false)
         }
@@ -111,7 +122,7 @@ const TableComponent = () => {
             navigate('/getStarted')
         }
 
-    }, [currentPage, dispatch, filterWrittenInURL, search, isExpired, navigate]);
+    }, [currentPage, dispatch, filterWrittenInURL, search, isExpired, navigate, idArr]);
 
 
     const getStringBetween = (str, start, end) => {
@@ -260,13 +271,17 @@ const TableComponent = () => {
     }
 
     let [checked, setChecked] = useState(false);
+
+
     const myClients = () => {
+
+
         if (checked) {
             setChecked(false)
-            navigate("/tables?page=1")
+            navigate(search.replace('&My=true', ''))
         } else {
             setChecked(true)
-            navigate("/tables?page=1&My=true")
+            navigate(search + "&My=true")
         }
     }
 
@@ -329,18 +344,49 @@ const TableComponent = () => {
                     {showComment && currentComment === data.id ?
                         <CommentForm show={setShowComment} id={data.id}/> : null}
                     <div>
-                        {data.comments.map(comment => <div
-                            style={{
-                                marginTop: '10px',
-                                border: '1px solid rgba(203, 203, 203, 0.62)',
-                                display: 'flex',
-                                justifyContent: 'center'
-                            }}
-                            key={comment.id}>
-                            <p>
-                                {comment.comment}|{comment.created_at}
-                            </p>
-                        </div>)}
+
+                        {updatedComments.comments && idArr.includes(data.id) ? updatedComments.comments.map(newComment =>
+
+                                <div
+                                    style={{
+                                        marginTop: '10px',
+                                        border: '1px solid rgba(203, 203, 203, 0.62)',
+                                        padding: '10px'
+                                    }}
+                                    key={newComment.id}>
+
+                                    {newComment.user ? <p>{newComment.user?.profile.name}:</p> : null}
+
+                                    <p>
+                                        {newComment.comment}
+                                    </p>
+
+                                    <p>commented at |{newComment.created_at}|</p>
+                                </div>
+                            ) :
+
+
+                            data.comments.map(comment => <div
+                                style={{
+                                    marginTop: '10px',
+                                    border: '1px solid rgba(203, 203, 203, 0.62)',
+                                    padding: '10px'
+                                }}
+                                key={comment.id}>
+
+                                {comment.user ? <p>{comment.user?.profile.name}:</p> : null}
+
+                                <p>
+                                    {comment.comment}
+                                </p>
+
+                                <p>commented at |{comment.created_at}|</p>
+                            </div>)
+
+
+                        }
+
+
                     </div>
 
                 </div>
@@ -385,8 +431,8 @@ const TableComponent = () => {
                     </div>
 
                     <div>
-                        <select id="Course" name="Course" {...register('course')}>
-                            <option value=""></option>
+                        <select id="Course" placeholder={'fee'} name="Course" {...register('course')}>
+                            <option value="">All Courses</option>
                             <option value="FS">Full Stack</option>
                             <option value="FE">Front End</option>
                             <option value="JSCX">Java Script Complex</option>
@@ -397,14 +443,14 @@ const TableComponent = () => {
                     </div>
                     <div>
                         <select id="CourseFormat" name="CourseFormat" {...register('courseFormat')}>
-                            <option value=""></option>
+                            <option value="">all Formats</option>
                             <option value="static">Static</option>
                             <option value="online">Online</option>
                         </select>
                     </div>
                     <div>
                         <select id="CourseType" name="CourseType" {...register('CourseType')}>
-                            <option value=""></option>
+                            <option value="">All Types</option>
                             <option value="minimal">Minimal</option>
                             <option value="pro">Pro</option>
                             <option value="premium">Premium</option>
@@ -432,7 +478,8 @@ const TableComponent = () => {
                 </form>
 
                 <div style={{display: "flex", width: '50px', position: "absolute", right: "173px", top: '67px'}}>
-                    <input style={{width: '20px'}} type={"checkbox"} onChange={myClients} placeholder={"mine"}/>My
+                    <input style={{width: '20px'}} type={"checkbox"} checked={checked} onChange={myClients}
+                           placeholder={"mine"}/>My
                 </div>
 
             </div>

@@ -21,6 +21,8 @@
     color: white;
     padding: 10px;
     font-weight: bold;
+
+    transition: ease-in-out 0.2;
 }
 
 .button h1 {
@@ -191,8 +193,13 @@
     border-radius: 10px;
 }
 
+
+.submitBtn{
+    transition: ease-in-out 0.2s;
+}
+
 .submitBtn:disabled{
-    background: #006d91;
+    background: rgb(0, 124, 171);
 }
 
 .field{

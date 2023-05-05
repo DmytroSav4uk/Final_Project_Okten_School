@@ -1,8 +1,8 @@
 import {useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
 
-import {adminActions} from "../../Redux/slices/admin.slice";
-import css from "../../css/passwordConfirm.module.css"
+import {adminActions} from "../../redux/slices/admin.slice";
+import css from "./passwordConfirm.module.css"
 import {useState} from "react";
 
 const UserActivateComponent = () => {

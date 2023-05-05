@@ -6,8 +6,8 @@ import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 import {joiResolver} from "@hookform/resolvers/joi";
 
-import {signUpInActions} from "../../Redux/slices/signUpIn.slice";
-import css from "../../css/getStarted.module.css"
+import {signUpInActions} from "../../redux/slices/signUpIn.slice";
+import css from "./getStarted.module.css"
 import {loginValidator} from "../../validators/login.validator";
 
 const GetStartedComponent = () => {

@@ -30,7 +30,7 @@ const editValidator = Joi.object({
     courseFormat: Joi.string().required().messages({
         'string.pattern.base': 'wrong data'
     }),
-    age: Joi.number().min(1).max(100).required().messages({
+    age: Joi.number().min(16).max(100).required().messages({
         'string.pattern.base': 'wrong data'
     }),
     group: Joi.string().required()

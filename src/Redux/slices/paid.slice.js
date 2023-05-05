@@ -4,6 +4,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 
 
+
 const initialState = {
     paidArr: [],
     groupsArr: [],
@@ -14,7 +15,9 @@ const initialState = {
     loading: false,
     rejected: false,
     success: false,
-    showEdit: false
+    showEdit: false,
+    updatedComments:[],
+    idArr:[]
 }
 
 const getAllPaid = createAsyncThunk('paidSlice/getAllPaid',
@@ -34,7 +37,7 @@ const getPaidById = createAsyncThunk('paidSlice/getPaidById',
     async (id, {_}) => {
         try {
             const {data} = await paidService.getPaidById(id)
-            localStorage.setItem('editPaid', JSON.stringify(data))
+          //  localStorage.setItem('editPaid', JSON.stringify(data))
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
@@ -47,7 +50,7 @@ const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
         try {
             const {data} = await paidService.getPaidById(id)
-            localStorage.setItem('editPaid', JSON.stringify(data))
+          //  localStorage.setItem('editPaid', JSON.stringify(data))
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
@@ -56,10 +59,10 @@ const getPaidForComment = createAsyncThunk('paidSlice/getPaidForComment',
 
 const patchPaidById = createAsyncThunk('paidSlice/patchPaidById',
 
-    async (editData, {_}) => {
+    async ({editData,id}, {_}) => {
 
         try {
-            const {data} = await paidService.changePaidById(editData)
+            const {data} = await paidService.changePaidById(editData,id);
             return data;
         } catch (e) {
             e.rejectWithValue(e.response.data)
@@ -145,14 +148,25 @@ const paidSlice = createSlice({
             .addCase(getPaidById.fulfilled, (state, action) => {
                 state.paidById = action.payload
                 state.showEdit = true
+                state.id = action.payload.id
             })
 
             .addCase(getPaidForComment.fulfilled, (state, action) => {
                 state.paidById = action.payload
             })
 
-            .addCase(patchPaidById.fulfilled, (state) => {
+            .addCase(patchPaidById.fulfilled, (state,action) => {
                 state.showEdit = false
+
+                if (action.payload.comments){
+                    state.updatedComments = action.payload
+
+                    if (state.idArr.length ===0){
+                        state.idArr = JSON.parse("[" + action.payload.id + "]")
+                    }else {
+                        state.idArr +=JSON.parse("["+ state.idArr + "," + action.payload.id +"]")
+                    }
+                }
             })
 
             .addCase(patchPaidById.rejected, (state) => {
@@ -168,7 +182,6 @@ const paidSlice = createSlice({
             })
 
             .addCase(getExcel.fulfilled, (state, action) => {
-                //state.excel = action.payload
 
                 const url = window.URL.createObjectURL(new Blob([action.payload]));
                 const link = document.createElement('a');
@@ -177,10 +190,7 @@ const paidSlice = createSlice({
                 document.body.appendChild(link);
                 link.click();
 
-
             })
-
-
 });
 
 const {reducer: paidReducer} = paidSlice;

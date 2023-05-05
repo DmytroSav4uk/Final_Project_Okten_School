@@ -2,36 +2,31 @@ import {useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {joiResolver} from "@hookform/resolvers/joi";
 
-import {paidActions} from "../../Redux/slices/paid.slice";
+import {paidActions} from "../../redux/slices/paid.slice";
 import {commentValidator} from "../../validators/comment.validator";
-import css from "../../css/comment.module.css";
+import css from "./comment.module.css";
 
 
-const CommentForm = ({show}) => {
+const CommentForm = ({show, id}) => {
 
     const {register, handleSubmit,formState:{isValid,errors}} = useForm({
-        mode:'onChange',
+        mode:'all',
         resolver: joiResolver(commentValidator)
     });
 
     const dispatch = useDispatch();
-    let url = window.location.search
 
     const commentSubmit = (data) => {
-        dispatch(paidActions.patchPaidById(data))
+        dispatch(paidActions.patchPaidById({editData:data,id:data.id}))
         show(false)
-
-        setTimeout(() => {
-            dispatch(paidActions.getAllPaid(url))
-        }, 1000)
-
     }
 
     return (
         <>
             <form className={css.form} onSubmit={handleSubmit(commentSubmit)}>
-                <input  placeholder={'comment'} {...register('comment')}/>
-                <button style={{borderRadius:'10px', transition:'ease-in-out 0.3s'}} disabled={!isValid} type={"submit"}>comment</button>
+                <input style={{display:'none'}} defaultValue={id} {...register('id')}/>
+                <input style={{width:'200px'}}  placeholder={'comment'} {...register('comment')}/>
+                <button style={{width:'100px', borderRadius:'10px', transition:'ease-in-out 0.3s'}} disabled={!isValid} type={"submit"}>comment</button>
             </form>
             {errors.comment?<span className={css.commentSpan}>{errors.comment.message}</span> :null}
         </>

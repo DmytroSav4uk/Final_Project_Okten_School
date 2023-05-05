@@ -1,20 +1,19 @@
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
- import PhoneInput from 'react-phone-input-2';
+import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 
-import {paidActions} from "../../Redux/slices/paid.slice";
-import css from "../../css/admin.module.css"
+import {paidActions} from "../../redux/slices/paid.slice";
+import css from "../AdminComponent/admin.module.css"
 import {joiResolver} from "@hookform/resolvers/joi";
 import {editValidator} from "../../validators/edit.validator";
 import {useEffect, useState} from "react";
-//import PhoneInput from "react-phone-number-input";
 
 
 const EditPaidComponent = ({preloadedValues}) => {
 
     const {register, control, reset, handleSubmit, formState: {isValid, errors}} = useForm({
-        mode: 'onChange',
+        mode: 'all',
         resolver: joiResolver(editValidator)
     });
 
@@ -29,7 +28,8 @@ const EditPaidComponent = ({preloadedValues}) => {
     }, [dispatch])
 
     const submit = (data) => {
-        dispatch(paidActions.patchPaidById(data))
+
+        dispatch(paidActions.patchPaidById({editData:data, id: data.id}))
 
         setTimeout(() => {
             dispatch(paidActions.getAllPaid(currentUrl))
@@ -68,6 +68,10 @@ const EditPaidComponent = ({preloadedValues}) => {
                     <div className={css.field}>
                         <div>
                             <p>Group</p>
+
+                            <input style={{display:'none'}} defaultValue={preloadedValues.id} placeholder={'id'} name={'id'} {...register('id')}/>
+
+
                             {showAddGroup ? <input placeholder={'group'} name={'group'} {...register('group')}/>
                                 : <select defaultValue={preloadedValues?.group?.name}
                                           style={{
@@ -150,7 +154,9 @@ const EditPaidComponent = ({preloadedValues}) => {
                     <div className={css.field}>
                         <div>
                             <p>Phone</p>
-                            <Controller control={control}  defaultValue={preloadedValues?.phone? preloadedValues?.phone : '380'} name={'phone'} render={
+                            <Controller control={control}
+                                        defaultValue={preloadedValues?.phone ? preloadedValues?.phone : '380'}
+                                        name={'phone'} render={
                                 ({field: {ref, ...field}}) => (
                                     <PhoneInput
                                         disableDropdown={true}
@@ -178,25 +184,6 @@ const EditPaidComponent = ({preloadedValues}) => {
                                             minWidth: '219px'
                                         }} country={'ua'}  {...field}/>
                                 )}/>
-
-
-                            {/*<Controller control={control} defaultValue={preloadedValues?.phone ? preloadedValues?.phone : '380'}*/}
-                            {/*            name={'phone'} render={*/}
-                            {/*    ({field: {ref,name,value, ...field}}) =>(*/}
-                            {/*        <PhoneInput*/}
-                            {/*            name={'phone'}*/}
-                            {/*            value={value}*/}
-                            {/*            limitMaxLength={true} countries={['UA']} defaultCountry={"UA"}*/}
-                            {/*            international={true}*/}
-                            {/*            {...field}*/}
-                            {/*        />*/}
-                            {/*    )}/>*/}
-
-
-                            {/*<input type={'tel'} maxLength={13}*/}
-                            {/*       defaultValue={prefix + preloadedValues?.phone || '+380'} placeholder={'phone'} {...register('phone')}/>*/}
-
-
                         </div>
                         <div>
                             <p>Email</p>
