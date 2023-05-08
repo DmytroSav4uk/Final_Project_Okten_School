@@ -1,9 +1,9 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 
-import {GetStartedComponent} from "./components/GetStartedComponent/GetStarted";
-import {TableComponent} from "./components/TableComponent/TableComponent";
-import {AdminComponent} from "./components/AdminComponent/AdminComponent";
-import {UserActivateComponent} from "./components/UserActivateComponent/UserActivateComponent";
+import {GetStartedComponent} from "./Components/GetStartedComponent/GetStarted";
+import {TableComponent} from "./Components/TableComponent/TableComponent";
+import {AdminComponent} from "./Components/AdminComponent/AdminComponent";
+import {UserActivateComponent} from "./Components/UserActivateComponent/UserActivateComponent";
 
 
 

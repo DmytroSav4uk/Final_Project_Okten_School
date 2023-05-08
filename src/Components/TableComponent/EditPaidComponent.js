@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 
-import {paidActions} from "../../redux/slices/paid.slice";
+import {paidActions} from "../../Redux/slices/paid.slice";
 import css from "../AdminComponent/admin.module.css"
 import {joiResolver} from "@hookform/resolvers/joi";
 import {editValidator} from "../../validators/edit.validator";

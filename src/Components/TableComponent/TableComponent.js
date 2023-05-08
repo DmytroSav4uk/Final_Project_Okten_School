@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
-import {paidActions} from "../../redux/slices/paid.slice";
+import {paidActions} from "../../Redux/slices/paid.slice";
 import css from "./table.module.css";
 import loadingGif from "../../icons/loading.gif";
 import resetPic from "../../icons/reset.png";
