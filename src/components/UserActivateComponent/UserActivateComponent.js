@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
 
-import {adminActions} from "../../Redux/slices/admin.slice";
+import {adminActions} from "../../redux/slices/admin.slice";
 import css from "./passwordConfirm.module.css"
 import {useState} from "react";
 

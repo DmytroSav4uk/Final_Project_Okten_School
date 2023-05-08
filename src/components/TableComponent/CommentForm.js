@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {joiResolver} from "@hookform/resolvers/joi";
 
-import {paidActions} from "../../Redux/slices/paid.slice";
+import {paidActions} from "../../redux/slices/paid.slice";
 import {commentValidator} from "../../validators/comment.validator";
 import css from "./comment.module.css";
 
