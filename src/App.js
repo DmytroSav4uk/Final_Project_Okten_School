@@ -5,13 +5,8 @@ import {TableComponent} from "./components/TableComponent/TableComponent";
 import {AdminComponent} from "./components/AdminComponent/AdminComponent";
 import {UserActivateComponent} from "./components/UserActivateComponent/UserActivateComponent";
 
-
-
 const App = () => (
     <div>
-
-
-
         <Routes>
             <Route path={'/getStarted'} element={<GetStartedComponent/>}/>
             <Route path={'/tables'} element={<TableComponent/>}/>

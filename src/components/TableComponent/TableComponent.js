@@ -89,7 +89,7 @@ const TableComponent = () => {
     let [filter, setFilter] = useState(null);
     let [filterWrittenInURL, setFilterWrittenInURL] = useState(true);
     let [timer, setTimer] = useState(null);
-    let [localFilter, setLocalFilter] = useState('');
+    //let [localFilter, setLocalFilter] = useState('');
     let [showComment, setShowComment] = useState(false);
     let [spin, setSpin] = useState(false);
     let [currentComment, setCurrentComment] = useState(null);
@@ -97,11 +97,9 @@ const TableComponent = () => {
     useEffect(() => {
 
 
-
-        if(idArr.length ===0){
+        if (idArr.length === 0) {
             dispatch(paidActions.getAllPaid(search))
         }
-
 
         if (search.includes('&My=true')) {
             setChecked(true)
@@ -203,13 +201,12 @@ const TableComponent = () => {
                 }
             }
         }
-        let query = urlSearchParams.toString()
+        let query = urlSearchParams.toString();
         setFilter(query);
-        let url = window.location.href;
-        setLocalFilter(getStringBetween(url, 'page=' + currentPage, '&order').replace("&", ""))
-        console.log(localFilter)
+        //let url = window.location.href;
+        //setLocalFilter(getStringBetween(url, 'page=' + currentPage, '&order').replace("&", ""));
 
-        clearTimeout(timer)
+        clearTimeout(timer);
 
         const newTimer = setTimeout(() => {
 
@@ -217,32 +214,41 @@ const TableComponent = () => {
 
             if (url.includes('order=')) {
 
-                let length = 'order='.length
-                let order = url.slice(url.indexOf('order=') + length)
+                let length = 'order='.length;
+                let order = url.slice(url.indexOf('order=') + length);
 
                 window.history.pushState("", query, '/tables?page=1&' + query + "&order=" + order);
-                dispatch(paidActions.getAllPaid('?page=1&' + query + "&order=" + order))
+                dispatch(paidActions.getAllPaid('?page=1&' + query + "&order=" + order));
             } else {
                 window.history.pushState("", query, '/tables?page=1&' + query);
-                dispatch(paidActions.getAllPaid('?page=1&' + query))
+                dispatch(paidActions.getAllPaid('?page=1&' + query));
             }
         }, 1000)
-        setTimer(newTimer)
+        setTimer(newTimer);
         setPaginateForFilteredData(true);
     };
 
+
+
     const accendingOrder = (orderBy) => {
-        window.history.pushState("", "", 'tables?page=1&order=' + orderBy)
+        const queryParams = new URLSearchParams(search);
+        queryParams.delete('order')
+
+        window.history.pushState("", "", '/tables?'+queryParams.toString() +'&order='+ orderBy)
+
         let url = window.location.search;
         dispatch(paidActions.getAllPaid(url))
     }
 
     const descendingOrder = (orderBy) => {
-        window.history.pushState("", "", 'tables?page=1&order=-' + orderBy)
+        const queryParams = new URLSearchParams(search);
+        queryParams.delete('order')
+
+        window.history.pushState("", "", '/tables?'+queryParams.toString() +'&order=-'+ orderBy)
+
         let url = window.location.search;
         dispatch(paidActions.getAllPaid(url))
     }
-
     const logOut = () => {
         localStorage.removeItem('currentUser');
         window.location = '/getStarted';
@@ -461,7 +467,12 @@ const TableComponent = () => {
                         <input className={css.smallAlign} placeholder={'Email'} {...register('email')}/>
                     </div>
 
-                    <img style={{marginLeft: "50px"}} className={spin ? css.spinning : css.reset} onClick={() => {
+                    <div style={{display: "flex", width: '50px',paddingRight:'5px'}}>
+                        <input style={{width: '20px'}} type={"checkbox"} checked={checked} onChange={myClients}
+                               placeholder={"mine"}/>My
+                    </div>
+
+                    <img  className={spin ? css.spinning : css.reset} onClick={() => {
                         reset();
                         setFilter('')
                         setSpin(true)
@@ -474,13 +485,9 @@ const TableComponent = () => {
 
                     <img onClick={getExcel} style={{marginLeft: '10px', width: '30px', cursor: 'pointer'}} src={excell}
                          alt={'excell download'}/>
-
                 </form>
 
-                <div style={{display: "flex", width: '50px', position: "absolute", right: "173px", top: '67px'}}>
-                    <input style={{width: '20px'}} type={"checkbox"} checked={checked} onChange={myClients}
-                           placeholder={"mine"}/>My
-                </div>
+
 
             </div>
             <div className={css.ordering}>

@@ -16,12 +16,14 @@ const UserActivateComponent = () => {
     let [error, setError] = useState(false);
     let [success, setSuccess] = useState(false);
     let [empty, setEmpty] = useState(false);
+    let [goToLogin, setGoTologin] = useState(false)
 
     const submit = (data) => {
         if (data.password !== '' && data.confirmPassword !== '') {
             if (data.password === data.confirmPassword) {
                 dispatch(adminActions.activateUser(data))
                 setSuccess(true)
+                setGoTologin(true)
                 setEmpty(false)
                 setError(false)
             } else {
@@ -36,6 +38,12 @@ const UserActivateComponent = () => {
         }
     }
 
+
+    const redirect = () => {
+        localStorage.removeItem('currentUser')
+        window.location.href = '/getStarted'
+    }
+
     return (
         <div className={css.wrap}>
             <div className={css.main}>
@@ -43,6 +51,7 @@ const UserActivateComponent = () => {
                 {success ? <h1>Password Created!</h1> : null}
                 {empty ? <h1>Some of fields are empty</h1> : null}
                 {error ? <h1>Passwords are different</h1> : null}
+                {goToLogin ? <button onClick={redirect}>go to login page</button> : null}
                 {success ? null : <form className={css.form} onSubmit={handleSubmit(submit)}>
                     <input type={"password"} placeholder={'enter a password'} {...register('password')}/>
                     <input type={"password"} placeholder={'confirm password'} {...register('confirmPassword')} />
