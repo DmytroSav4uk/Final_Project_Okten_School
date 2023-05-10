@@ -164,7 +164,6 @@ const TableComponent = () => {
     };
 
     const getPreviousPage = () => {
-
         let url = window.location.href;
 
         if (url.includes('order=')) {
@@ -172,21 +171,22 @@ const TableComponent = () => {
             let order = url.slice(url.indexOf('order=') + length)
             currentPage--
 
-            if (filter !== '') {
-                navigate("/tables?page=" + currentPage + "&order=" + order)
+            if (filter === '') {
+                navigate("/tables?page=" + currentPage + "&order=" + order
+                )
             } else {
                 navigate("/tables?page=" + currentPage + "&" + filter + "&order=" + order)
             }
 
         } else {
             if (paginateForFilteredData !== true) {
-                currentPage--
+                currentPage++
                 navigate("/tables?page=" + currentPage)
             } else if (filterWrittenInURL === false) {
-                currentPage--
+                currentPage++
                 navigate("/tables?page=" + currentPage + filter)
             } else {
-                currentPage--
+                currentPage++
                 navigate("/tables?page=" + currentPage + "&" + filter)
             }
         }
