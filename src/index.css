@@ -37,3 +37,16 @@ input{
 .react-tel-input{
   margin-top: 5px;
 }
+
+.jtfTQm{
+  transition: ease-in-out 0.3s;
+}
+
+.jtfTQm:hover{
+scale: 101%;
+  background-color: #ececec !important;
+}
+
+.rdt_TableRow{
+  background: beige;
+}

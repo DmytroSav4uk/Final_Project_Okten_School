@@ -8,21 +8,20 @@
 }
 
 .button {
-    background: deepskyblue;
-    border-radius: 10px;
     width: fit-content;
-
     cursor: pointer;
     margin-right: 20px;
     height: 40px;
     display: grid;
     align-items: center;
-    border: 2px solid deepskyblue;
-    color: white;
+    color: steelblue;
     padding: 10px;
     font-weight: bold;
-
-    transition: ease-in-out 0.2;
+    transition: ease-in-out 0.2ms;
+}
+.button h1:hover{
+    color: rgba(42, 227, 189, 0.68);
+    transition-delay: 0s;
 }
 
 .button h1 {
@@ -30,8 +29,8 @@
     color: white;
     font-size: 25px;
     text-align: center;
-    padding-left: 5px;
-    padding-right: 5px;
+    transition: color 0.1s;
+    transition-delay: 0.1s;
 }
 
 
@@ -86,7 +85,7 @@
     font-size: 17px;
 
     height: 65px;
-    background: deepskyblue;
+    background: steelblue;
     border:none;
     color: white;
     border-radius: 10px;
@@ -94,7 +93,7 @@
 }
 
 .copyUrl{
-    background: deepskyblue;
+    background: steelblue;
     text-align: center;
     width: 50%;
     color: white;
@@ -180,14 +179,14 @@
 .span{
     padding: 10px;
     color: red;
-    background: deepskyblue;
+    background: steelblue;
     border-radius: 10px;
     font-family: Calibri;
     font-weight: bolder;
 }
 
 .successMessage{
-    background: deepskyblue;
+    background: slateblue;
     color: white;
     padding: 10px;
     border-radius: 10px;
@@ -196,10 +195,11 @@
 
 .submitBtn{
     transition: ease-in-out 0.2s;
+    background: rgb(0, 124, 171);
 }
 
 .submitBtn:disabled{
-    background: rgb(0, 124, 171);
+    background: rgba(0, 124, 171, 0.54);
 }
 
 .field{
@@ -229,7 +229,7 @@
 
 
 .controlButtons{
-    border: 1px solid deepskyblue;
+    background: slateblue;
     border-radius: 10px;
     width: fit-content;
     height: fit-content;
@@ -243,9 +243,10 @@
     padding: 10px;
 }
 
+
 .statistics{
     margin-left: 49px;
-    background: deepskyblue;
+    background: slateblue;
     border-radius: 10px;
     padding: 10px;
     color: white;

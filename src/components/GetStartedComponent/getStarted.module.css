@@ -63,7 +63,7 @@ label{
     outline: none;
     border: none;
     border-radius: 5px;
-    transition: .2s ease-in;
+    transition: .3s ease-in;
     cursor: pointer;
 }
 .main button:hover{
@@ -86,7 +86,8 @@ label{
     background: #eee;
     border-radius: 60% / 10%;
     transform: translateY(10px);
-    transition: .8s ease-in-out;
+    /*transition: .8s ease-in-out;*/
+    transition: all 1s ease 0s;
 }
 
 .loginClicked label{

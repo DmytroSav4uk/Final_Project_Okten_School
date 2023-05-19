@@ -14,13 +14,11 @@ import excell from "../../icons/excell.png";
 import {EditPaidComponent} from "./EditPaidComponent";
 import {CommentForm} from "./CommentForm";
 
-
 const TableComponent = () => {
 
     const {register, reset, handleSubmit} = useForm({
         mode: 'onChange'
     });
-
 
     const columns = [
         {
@@ -78,37 +76,23 @@ const TableComponent = () => {
     const {loading} = useSelector(state => state.paidReducer);
     const {success} = useSelector(state => state.paidReducer);
 
-
     let {currentPage} = useSelector(state => state.paidReducer);
     let {paidById} = useSelector(state => state.paidReducer);
     const {showEdit} = useSelector(state => state.paidReducer);
     const {updatedComments} = useSelector(state => state.paidReducer);
     const {idArr} = useSelector(state => state.paidReducer);
 
-    let [paginateForFilteredData, setPaginateForFilteredData] = useState(false);
-    let [filter, setFilter] = useState(null);
-    let [filterWrittenInURL, setFilterWrittenInURL] = useState(true);
     let [timer, setTimer] = useState(null);
-    //let [localFilter, setLocalFilter] = useState('');
     let [showComment, setShowComment] = useState(false);
     let [spin, setSpin] = useState(false);
     let [currentComment, setCurrentComment] = useState(null);
 
     useEffect(() => {
-
-
         if (idArr.length === 0) {
             dispatch(paidActions.getAllPaid(search))
         }
-
         if (search.includes('&My=true')) {
             setChecked(true)
-        }
-
-        if (filterWrittenInURL && search.length > 8) {
-            setPaginateForFilteredData(true);
-            setFilter(getStringBetween(search, `page=${currentPage}`, 'order'))
-            setFilterWrittenInURL(false)
         }
 
         if (!isExpired) {
@@ -119,77 +103,21 @@ const TableComponent = () => {
         } else {
             navigate('/getStarted')
         }
+    }, [currentPage, dispatch,  search, isExpired, navigate, idArr]);
 
-    }, [currentPage, dispatch, filterWrittenInURL, search, isExpired, navigate, idArr]);
-
-
-    const getStringBetween = (str, start, end) => {
-
-        const result = str?.match(new RegExp(start + "(.*)" + end));
-        if (result) {
-            return result[1];
-        } else {
-            return '';
-        }
-    }
 
     const getNextPage = () => {
-
-        let url = window.location.href;
-
-        if (url.includes('order=')) {
-            let length = 'order='.length
-            let order = url.slice(url.indexOf('order=') + length)
-            currentPage++
-
-            if (filter === '') {
-                navigate("/tables?page=" + currentPage + "&order=" + order
-                )
-            } else {
-                navigate("/tables?page=" + currentPage + "&" + filter + "&order=" + order)
-            }
-
-        } else {
-            if (paginateForFilteredData !== true) {
-                currentPage++
-                navigate("/tables?page=" + currentPage)
-            } else if (filterWrittenInURL === false) {
-                currentPage++
-                navigate("/tables?page=" + currentPage + filter)
-            } else {
-                currentPage++
-                navigate("/tables?page=" + currentPage + "&" + filter)
-            }
-        }
+        currentPage++;
+        let match = search.match(/page=(\d+)/);
+        let page = match ? parseInt(match[1]) : null;
+        navigate("/tables" + search.replace(page, currentPage))
     };
 
     const getPreviousPage = () => {
-        let url = window.location.href;
-
-        if (url.includes('order=')) {
-            let length = 'order='.length
-            let order = url.slice(url.indexOf('order=') + length)
-            currentPage--
-
-            if (filter === '') {
-                navigate("/tables?page=" + currentPage + "&order=" + order
-                )
-            } else {
-                navigate("/tables?page=" + currentPage + "&" + filter + "&order=" + order)
-            }
-
-        } else {
-            if (paginateForFilteredData !== true) {
-                currentPage++
-                navigate("/tables?page=" + currentPage)
-            } else if (filterWrittenInURL === false) {
-                currentPage++
-                navigate("/tables?page=" + currentPage + filter)
-            } else {
-                currentPage++
-                navigate("/tables?page=" + currentPage + "&" + filter)
-            }
-        }
+        currentPage--;
+        let match = search.match(/page=(\d+)/);
+        let page = match ? parseInt(match[1]) : null;
+        navigate("/tables" + search.replace(page, currentPage))
     };
 
     const submit = (data) => {
@@ -201,10 +129,8 @@ const TableComponent = () => {
                 }
             }
         }
+
         let query = urlSearchParams.toString();
-        setFilter(query);
-        //let url = window.location.href;
-        //setLocalFilter(getStringBetween(url, 'page=' + currentPage, '&order').replace("&", ""));
 
         clearTimeout(timer);
 
@@ -220,21 +146,24 @@ const TableComponent = () => {
                 window.history.pushState("", query, '/tables?page=1&' + query + "&order=" + order);
                 dispatch(paidActions.getAllPaid('?page=1&' + query + "&order=" + order));
             } else {
-                window.history.pushState("", query, '/tables?page=1&' + query);
-                dispatch(paidActions.getAllPaid('?page=1&' + query));
+                if (!url.includes('My=true')) {
+                    window.history.pushState("", query, '/tables?page=1&' + query);
+                    dispatch(paidActions.getAllPaid('?page=1&' + query));
+                } else {
+                    window.history.pushState("", query, '/tables?page=1&' + query + "&My=true");
+                    dispatch(paidActions.getAllPaid('?page=1&' + query + "&My=true"));
+                }
             }
         }, 1000)
         setTimer(newTimer);
-        setPaginateForFilteredData(true);
     };
-
 
 
     const accendingOrder = (orderBy) => {
         const queryParams = new URLSearchParams(search);
         queryParams.delete('order')
 
-        window.history.pushState("", "", '/tables?'+queryParams.toString() +'&order='+ orderBy)
+        window.history.pushState("", "", '/tables?' + queryParams.toString() + '&order=' + orderBy)
 
         let url = window.location.search;
         dispatch(paidActions.getAllPaid(url))
@@ -244,7 +173,7 @@ const TableComponent = () => {
         const queryParams = new URLSearchParams(search);
         queryParams.delete('order')
 
-        window.history.pushState("", "", '/tables?'+queryParams.toString() +'&order=-'+ orderBy)
+        window.history.pushState("", "", '/tables?' + queryParams.toString() + '&order=-' + orderBy)
 
         let url = window.location.search;
         dispatch(paidActions.getAllPaid(url))
@@ -280,7 +209,6 @@ const TableComponent = () => {
 
 
     const myClients = () => {
-
 
         if (checked) {
             setChecked(false)
@@ -381,22 +309,14 @@ const TableComponent = () => {
                                 key={comment.id}>
 
                                 {comment.user ? <p>{comment.user?.profile.name}:</p> : null}
-
                                 <p>
                                     {comment.comment}
                                 </p>
-
                                 <p>commented at |{comment.created_at}|</p>
                             </div>)
-
-
                         }
-
-
                     </div>
-
                 </div>
-
             </div>
         </>;
 
@@ -410,14 +330,19 @@ const TableComponent = () => {
                 <div className={css.userName}>
                     <h1> Hello, {currentUser?.profile.name}!</h1>
                 </div>
-                <div onClick={logOut} className={css.logout}>
-                    <h1>logout</h1>
+                <div className={css.twoButtons}>
+                    <div onClick={logOut} className={css.logout}>
+                        <h1>Logout</h1>
+                    </div>
+                    {currentUser?.is_superuser ?
+                        <div onClick={goToAdminPage} className={css.admin}><h1>Admin Page</h1></div> : null}
                 </div>
-
-                {currentUser?.is_superuser ?
-                    <div onClick={goToAdminPage} className={css.admin}><h1>Admin Page</h1></div> : null}
             </div>
-            <div className={'filters'}>
+            <div className={'filters'} style={{
+                display: "flex",
+                height: "30px",
+                width: "100%"
+            }}>
                 <form className={css.form} onChange={handleSubmit(submit)}>
                     <div>
                         <input placeholder={'Id'}   {...register('id')}/>
@@ -467,28 +392,28 @@ const TableComponent = () => {
                         <input className={css.smallAlign} placeholder={'Email'} {...register('email')}/>
                     </div>
 
-                    <div style={{display: "flex", width: '50px',paddingRight:'5px'}}>
-                        <input style={{width: '20px'}} type={"checkbox"} checked={checked} onChange={myClients}
-                               placeholder={"mine"}/>My
-                    </div>
 
-                    <img  className={spin ? css.spinning : css.reset} onClick={() => {
-                        reset();
-                        setFilter('')
-                        setSpin(true)
-                        setTimeout(() => {
-                            setSpin(false)
-                        }, 900)
-                        window.history.pushState("", "", "/tables?page=1")
-                        dispatch(paidActions.getAllPaid('?page=1'))
-                    }} src={resetPic} alt={'reset'}/>
-
-                    <img onClick={getExcel} style={{marginLeft: '10px', width: '30px', cursor: 'pointer'}} src={excell}
-                         alt={'excell download'}/>
                 </form>
-
-
-
+                <div style={{height: '100px', width: '200px'}}>
+                    <div style={{display: "flex", width: '50px', paddingRight: '5px'}}>
+                        <input style={{width: '20px', height: '20px'}} type={"checkbox"} checked={checked}
+                               onChange={myClients}
+                               placeholder={"mine"}/>My
+                        <img className={spin ? css.spinning : css.reset} onClick={() => {
+                            reset();
+                            //setFilter('')
+                            setSpin(true)
+                            setTimeout(() => {
+                                setSpin(false)
+                            }, 900)
+                            window.history.pushState("", "", "/tables?page=1")
+                            dispatch(paidActions.getAllPaid('?page=1'))
+                        }} src={resetPic} alt={'reset'}/>
+                        <img onClick={getExcel} style={{marginLeft: '10px', width: '30px', cursor: 'pointer'}}
+                             src={excell}
+                             alt={'excell download'}/>
+                    </div>
+                </div>
             </div>
             <div className={css.ordering}>
                 <div onClick={() => {
@@ -529,7 +454,6 @@ const TableComponent = () => {
             </div>
 
             <div>
-
                 {loading ?
                     <div style={{background: "#FBFBFB", width: "100%", display: "flex", justifyContent: "center"}}>
                         <img src={loadingGif} alt={"loading"}/>
@@ -558,7 +482,6 @@ const TableComponent = () => {
                         : null}
                 </div>
             </div>
-
 
             <div className={css.paginator}>
                 <div className={css.buttons}>

@@ -10,6 +10,7 @@ import {signUpInActions} from "../../redux/slices/signUpIn.slice";
 import css from "./getStarted.module.css"
 import {loginValidator} from "../../validators/login.validator";
 
+
 const GetStartedComponent = () => {
 
     let tokens = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
@@ -19,6 +20,9 @@ const GetStartedComponent = () => {
 
     const {redirect} = useSelector(state => state.signUpInReducer);
     const {error} = useSelector(state => state.signUpInReducer);
+    const {errorCode} = useSelector(state => state.signUpInReducer);
+    const {blocked} = useSelector(state => state.signUpInReducer);
+
 
     let [loginState, setLoginState] = useState(css.login);
 
@@ -26,16 +30,15 @@ const GetStartedComponent = () => {
         resolver: joiResolver(loginValidator),
         mode: 'onChange'
     })
-
+    const {msg} = useSelector(state => state.signUpInReducer);
     useEffect(() => {
-
         if (tokens) {
             const refreshDecoded = jwt_decode(tokens?.refresh_token);
             const refreshExpired = dayjs.unix(refreshDecoded.exp).diff(dayjs()) < 1;
 
             if (refreshExpired) {
                 localStorage.removeItem('currentUser')
-            }else {
+            } else {
                 navigate("/tables?page=1&order=-id")
             }
         }
@@ -43,7 +46,7 @@ const GetStartedComponent = () => {
         if (redirect) {
             navigate('/tables?page=1&order=-id')
         }
-    }, [redirect, navigate,tokens])
+    }, [redirect, navigate, tokens, msg])
 
     const changeLoginState = () => {
         if (loginState === css.login) {
@@ -53,16 +56,20 @@ const GetStartedComponent = () => {
         }
     }
 
-    const submit = (data) => {
+    const submit = async (data) => {
         dispatch(signUpInActions.signIn(data));
         reset()
     };
 
     return (
         <div className={css.wrap}>
+
+            {errorCode}
+
             <div className={css.main}>
                 {error ?
-                    <label className={css.wrongData} htmlFor={css.chk} aria-hidden="true">Oops, wrong data</label> :
+                    <label className={css.wrongData} htmlFor={css.chk} aria-hidden="true">{blocked ? <>user is
+                        blocked</> : <>wrong data</>}</label> :
                     <label htmlFor={css.chk} aria-hidden="true">Welcome!</label>}
                 <div className={loginState}>
                     <form onSubmit={handleSubmit(submit)}>
@@ -70,9 +77,9 @@ const GetStartedComponent = () => {
                         <input type={"email"} name={"email"} placeholder={"Email"} {...register('email')}/>
                         <input type={"password"} name={"pswd"} placeholder={"Password"} {...register('password')} />
                         {errors.password || errors.email ?
-                            <div style={{textAlign: "center",width:'100%' ,color:'red'}}>
-                                <span style={{width:'100%',margin:'0'}}>form is invalid</span>
-                            </div>:null
+                            <div style={{textAlign: "center", width: '100%', color: 'red'}}>
+                                <span style={{width: '100%', margin: '0'}}>form is invalid</span>
+                            </div> : null
                         }
                         <button disabled={!isValid} type={"submit"}>Login</button>
                     </form>

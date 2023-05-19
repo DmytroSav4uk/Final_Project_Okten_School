@@ -7,8 +7,10 @@ const initialState = {
     signInData: {},
     signUpData: {},
     error: false,
+    blocked: false,
     redirect: false,
-  //  isLogged: false
+    errorCode: null
+
 }
 
 const signIn = createAsyncThunk('signInUpSlice/signIn',
@@ -17,10 +19,13 @@ const signIn = createAsyncThunk('signInUpSlice/signIn',
 
         try {
             const {data} = await signUpInService.signIn(signInInputData)
-            localStorage.setItem('currentUser', JSON.stringify(data))
-            return data;
-        } catch (e) {
-            e.rejectWithValue(e.response.data)
+            if (!data.is_blocked){
+                localStorage.setItem('currentUser', JSON.stringify(data))
+            }
+                return data;
+            } catch (e) {
+             e.rejectWithValue(e.response.data)
+            return e.rejectWithValue(e.response.data)
         }
     })
 
@@ -28,26 +33,43 @@ const signUpInSlice = createSlice({
 
     name: 'signUpInSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        setServerError: (state, action) => {
+            //const {error_code} = action.payload.response;
+            state.blocked = true;
+        }
+    },
     extraReducers: builder =>
         builder
             .addCase(signIn.fulfilled, (state, action) => {
-                state.error = false
-                state.signInData = action.payload
-                state.redirect = true
-            //    state.isLogged = true
-            })
 
-            .addCase(signIn.rejected, (state, _) => {
+                if (action.payload.is_blocked){
+                    state.error = true
+                    state.blocked = true
+                }
+
+                else {
+                    state.error = false
+                    state.signInData = action.payload
+                    state.redirect = true
+                }
+
+
+
+            })
+            .addCase(signIn.rejected, (state, action) => {
                 state.error = true
                 state.redirect = false
             })
+
+
+
 });
 
-const {reducer: signUpInReducer} = signUpInSlice;
+const {reducer: signUpInReducer, actions:{setServerError} } = signUpInSlice;
 
 const signUpInActions = {
-    signIn
+    signIn, setServerError
 }
 
 

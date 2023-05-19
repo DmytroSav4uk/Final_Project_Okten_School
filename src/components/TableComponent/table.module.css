@@ -2,21 +2,27 @@
     background: slateblue;
     margin-bottom: 10px;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+}
+
+.twoButtons {
+    background: slateblue;
+    display: flex;
     justify-content: right;
     align-items: center;
     height: 60px;
 }
 
 .buttonGoBack {
-    background: deepskyblue;
+    background: rgba(45, 131, 84, 0.5);
     border-radius: 100%;
     width: 50px;
     height: 50px;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     cursor: pointer;
 }
 
@@ -46,18 +52,23 @@
     font-size: 17px;
     width: 100px;
     height: 65px;
-    background: deepskyblue;
+    background: rgba(21, 206, 93, 0.5);
     border: none;
     color: white;
     border-radius: 10px;
+    transition: ease-in-out 0.3s;
 }
 
 .button:hover {
     cursor: pointer;
 }
 
+.button:disabled{
+    background: rgba(22, 187, 86, 0.23);
+}
+
 .button:active {
-    background: deepskyblue;
+    background: rgba(22, 187, 86, 0.5);
 }
 
 
@@ -95,7 +106,6 @@
 
 
 .paragraphs {
-    border: 2px solid deepskyblue;
     display: flex;
     flex-direction: column;
     max-height: 65px;
@@ -115,7 +125,6 @@
 .form div {
     display: flex;
     justify-content: center;
-
     width: 120px;
     padding-left: 16px;
     padding-right: 30px;
@@ -131,7 +140,6 @@
 
 
 .logout {
-    background: deepskyblue;
     border-radius: 10px;
     width: 100px;
     cursor: pointer;
@@ -139,7 +147,6 @@
     height: 40px;
     display: grid;
     align-items: center;
-    border: 2px solid deepskyblue;
 }
 
 .logout h1 {
@@ -147,7 +154,15 @@
     color: white;
     font-size: 25px;
     text-align: center;
+    transition: color 0.1s;
+    transition-delay: 0.1s;
 }
+
+.logout h1:hover {
+    color: rgba(42, 227, 189, 0.68);
+    transition-delay: 0s;
+}
+
 
 .ordering {
     display: flex;
@@ -155,19 +170,16 @@
     color: rgba(0, 0, 0, 0.87);
     font-size: 12px;
     font-weight: 500;
-
     -moz-box-align: stretch;
     align-items: stretch;
     background-color: rgb(255, 255, 255);
     min-height: 52px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-
     padding-left: 48px;
 }
 
 .ordering div {
     text-align: left;
-
     -moz-box-flex: 1;
     max-width: 100%;
     min-width: 100px;
@@ -188,7 +200,8 @@
 }
 
 .ordering div:hover {
-  background: rgba(224, 224, 224, 0.43);
+    background: rgba(224, 224, 224, 0.43);
+    color: slateblue;
 }
 
 .smallAlign {
@@ -197,13 +210,12 @@
 
 
 .userName {
-    border-radius: 10px;
-    border: 2px solid deepskyblue;
     width: 200px;
     cursor: default;
+    padding-left: 50px;
     margin-right: 20px;
     height: 40px;
-    display: grid;
+    display: flex;
     align-items: center;
 }
 
@@ -215,7 +227,6 @@
 }
 
 .admin {
-    background: deepskyblue;
     border-radius: 10px;
     width: 200px;
     cursor: pointer;
@@ -223,24 +234,28 @@
     height: 40px;
     display: grid;
     align-items: center;
-    border: 2px solid deepskyblue;
 }
-
 
 .admin h1 {
     margin: 0;
     color: white;
     font-size: 25px;
     text-align: center;
+    transition: color 0.1s;
+    transition-delay: 0.1s;
 }
 
+.admin h1:hover {
+    color: rgba(42, 227, 189, 0.68);
+    transition-delay: 0s;
+}
 
 .msgCmntFather {
     display: flex;
 }
 
 .message {
-    border: 1px solid deepskyblue;
+    border: 1px solid steelblue;
     width: 25%;
     margin-left: 48px;
     margin-top: 10px;
@@ -249,9 +264,9 @@
     border-radius: 10px;
 }
 
-.message div{
+.message div {
     margin-top: 10px;
-    background: deepskyblue;
+    background: steelblue;
     width: 50%;
     border-radius: 10px;
     font-family: Calibri;
@@ -261,13 +276,13 @@
     margin-bottom: 10px;
 }
 
-.message div p{
+.message div p {
     font-size: 19px;
-   margin-left: 10px;
+    margin-left: 10px;
 }
 
 .comments {
-    border: 1px solid deepskyblue;
+    border: 1px solid steelblue;
     width: 25%;
     margin-left: 48px;
     margin-top: 10px;
@@ -282,14 +297,14 @@
     overflow: hidden;
 }
 
-.comments button{
+.comments button {
     width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 
     padding: 20px;
-    background: deepskyblue;
+    background: steelblue;
     border: none;
     border-radius: 0 0 10px 10px;
     height: 30px;
@@ -299,23 +314,22 @@
     cursor: pointer;
 }
 
-.comments button:disabled{
-    background: rgb(0, 124, 171);
+.comments button:disabled {
+    background: rgba(0, 124, 171, 0.5);
 }
 
-.DetailsFather button:disabled{
-    background: rgb(0, 124, 171);
+.DetailsFather button:disabled {
+    background: rgba(0, 124, 171, 0.5);
 }
 
 .DetailsFather {
     margin-top: 10px;
     overflow: hidden;
-    border: 1px solid deepskyblue;
+    border: 1px solid steelblue;
     width: 54.5%;
     margin-left: 48px;
     border-radius: 20px;
     padding: 10px 10px 0;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -330,7 +344,7 @@
     padding: 20px;
     margin-top: 10px;
 
-    background: deepskyblue;
+    background: steelblue;
     border: none;
 
     border-radius: 10px 10px 0 0;
@@ -355,8 +369,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: start;
-
-    background: deepskyblue;
+    background: steelblue;
     color: white;
     font-weight: bold;
     text-align: center;
@@ -375,7 +388,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: deepskyblue;
+    background: steelblue;
     color: white;
     font-weight: bold;
     text-align: center;
