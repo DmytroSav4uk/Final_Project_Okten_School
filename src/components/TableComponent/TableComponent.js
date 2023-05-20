@@ -92,22 +92,22 @@ const TableComponent = () => {
     let [showComment, setShowComment] = useState(false);
     let [spin, setSpin] = useState(false);
     let [currentComment, setCurrentComment] = useState(null);
-
+    let [inputPrefill,setInputPrefill] = useState({});
+   
     useEffect(() => {
 
-        for (const key in search) {
-            if (search.hasOwnProperty(key)) {
-                if (search[key] !== "") {
-                    urlSearchParams.append(`${key}`, `${search[key]}`);
-                }
-            }
-        }
+        const pairs = search.split("&");
+        const result = {};
 
-        let query = urlSearchParams.toString();
-
-
+        pairs.forEach(pair => {
+            const [key, value] = pair.split("=");
+            result[key] = value;
+        });
+        
+        setInputPrefill(result)
 
 
+        
         if (idArr.length === 0) {
             dispatch(paidActions.getAllPaid(search))
         }
@@ -123,6 +123,7 @@ const TableComponent = () => {
         } else {
             navigate('/getStarted')
         }
+        /* eslint-disable */
     }, [currentPage, dispatch, search, isExpired, navigate, idArr]);
 
 
@@ -140,6 +141,10 @@ const TableComponent = () => {
         navigate("/tables" + search.replace(page, currentPage))
     };
 
+    
+    
+    
+    
     const submit = (data) => {
 
         for (const key in data) {
@@ -368,24 +373,24 @@ const TableComponent = () => {
                 }}>
                     <form className={css.form} onChange={handleSubmit(submit)}>
                         <div>
-                            <input placeholder={'Id'}   {...register('id')}/>
+                            <input defaultValue={inputPrefill?.id} placeholder={'Id'}   {...register('id')}/>
                         </div>
 
                         <div>
-                            <input placeholder={'Name'}   {...register('name')}/>
+                            <input defaultValue={inputPrefill?.name} placeholder={'Name'}   {...register('name')}/>
 
                         </div>
 
                         <div>
-                            <input placeholder={'Surname'} {...register('surname')}/>
+                            <input defaultValue={inputPrefill?.surname} placeholder={'Surname'} {...register('surname')}/>
                         </div>
 
                         <div>
-                            <input placeholder={'Phone'}  {...register('phone')}/>
+                            <input placeholder={'Phone'} defaultValue={inputPrefill?.phone}  {...register('phone')}/>
                         </div>
 
                         <div>
-                            <select id="Course" placeholder={'fee'} name="Course" {...register('course')}>
+                            <select id="Course" placeholder={'fee'} name="Course" defaultValue={inputPrefill?.course} {...register('course')}>
                                 <option value="">All Courses</option>
                                 <option value="FS">Full Stack</option>
                                 <option value="FE">Front End</option>
@@ -396,14 +401,14 @@ const TableComponent = () => {
                             </select>
                         </div>
                         <div>
-                            <select id="CourseFormat" name="CourseFormat" {...register('courseFormat')}>
+                            <select id="CourseFormat" name="CourseFormat" defaultValue={inputPrefill?.courseFormat} {...register('courseFormat')}>
                                 <option value="">all Formats</option>
                                 <option value="static">Static</option>
                                 <option value="online">Online</option>
                             </select>
                         </div>
                         <div>
-                            <select id="CourseType" name="CourseType" {...register('CourseType')}>
+                            <select id="CourseType" name="CourseType" defaultValue={inputPrefill?.courseType} {...register('CourseType')}>
                                 <option value="">All Types</option>
                                 <option value="minimal">Minimal</option>
                                 <option value="pro">Pro</option>
@@ -413,11 +418,11 @@ const TableComponent = () => {
                         </div>
 
                         <div>
-                            <input placeholder={'Email'} {...register('email')}/>
+                            <input placeholder={'Email'} defaultValue={inputPrefill?.email} {...register('email')}/>
                         </div>
 
                         <div>
-                            <input type={"date"} {...register('createdAt')} />
+                            <input type={"date"} defaultValue={inputPrefill?.createdAt} {...register('createdAt')} />
                         </div>
 
                     </form>
