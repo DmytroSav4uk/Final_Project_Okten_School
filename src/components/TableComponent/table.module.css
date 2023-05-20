@@ -138,16 +138,7 @@
 }
 
 
-@media only screen and (min-width: 1920px) {
-    .form {
-        justify-content: space-between;
-        padding: 0;
-    }
 
-    .form div{
-        width: 300px;
-    }
-}
 
 
 
@@ -439,4 +430,28 @@
 
 .moreBtn:hover{
     color: #0079a1;
+}
+
+
+
+@media only screen and (min-width: 1920px) {
+    .form {
+        padding-left: 46px;
+        gap: 70px;
+
+    }
+
+    .form div{
+        margin-right: 10px;
+        width: 200px;
+    }
+
+    .ordering{
+        padding-right: 10px;
+    }
+
+    .ordering div{
+        padding-left: 30px;
+        margin-right: 10px;
+    }
 }
