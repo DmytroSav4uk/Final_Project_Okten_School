@@ -53,6 +53,12 @@ const TableComponent = () => {
             selector: row => row.email ? row.email : "null",
         },
 
+
+        {
+            selector: row => row.createdAt ? row.createdAt.split('T')[0] : "null"
+        },
+
+
         {
             selector: row => row.user?.profile.username ? row.user?.profile.username : "null",
         },
@@ -88,6 +94,20 @@ const TableComponent = () => {
     let [currentComment, setCurrentComment] = useState(null);
 
     useEffect(() => {
+
+        for (const key in search) {
+            if (search.hasOwnProperty(key)) {
+                if (search[key] !== "") {
+                    urlSearchParams.append(`${key}`, `${search[key]}`);
+                }
+            }
+        }
+
+        let query = urlSearchParams.toString();
+
+
+
+
         if (idArr.length === 0) {
             dispatch(paidActions.getAllPaid(search))
         }
@@ -103,7 +123,7 @@ const TableComponent = () => {
         } else {
             navigate('/getStarted')
         }
-    }, [currentPage, dispatch,  search, isExpired, navigate, idArr]);
+    }, [currentPage, dispatch, search, isExpired, navigate, idArr]);
 
 
     const getNextPage = () => {
@@ -338,140 +358,155 @@ const TableComponent = () => {
                         <div onClick={goToAdminPage} className={css.admin}><h1>Admin Page</h1></div> : null}
                 </div>
             </div>
-            <div className={'filters'} style={{
-                display: "flex",
-                height: "30px",
-                width: "100%"
-            }}>
-                <form className={css.form} onChange={handleSubmit(submit)}>
-                    <div>
-                        <input placeholder={'Id'}   {...register('id')}/>
-                    </div>
-
-                    <div>
-                        <input placeholder={'Name'}   {...register('name')}/>
-
-                    </div>
-
-                    <div>
-                        <input placeholder={'Surname'} {...register('surname')}/>
-                    </div>
-
-                    <div>
-                        <input placeholder={'Phone'}  {...register('phone')}/>
-                    </div>
-
-                    <div>
-                        <select id="Course" placeholder={'fee'} name="Course" {...register('course')}>
-                            <option value="">All Courses</option>
-                            <option value="FS">Full Stack</option>
-                            <option value="FE">Front End</option>
-                            <option value="JSCX">Java Script Complex</option>
-                            <option value="JCX">Java Complex</option>
-                            <option value="PCX">Python Complex</option>
-                            <option value="QACX">QA Complex</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select id="CourseFormat" name="CourseFormat" {...register('courseFormat')}>
-                            <option value="">all Formats</option>
-                            <option value="static">Static</option>
-                            <option value="online">Online</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select id="CourseType" name="CourseType" {...register('CourseType')}>
-                            <option value="">All Types</option>
-                            <option value="minimal">Minimal</option>
-                            <option value="pro">Pro</option>
-                            <option value="premium">Premium</option>
-                            <option value="incubator">Incubator</option>
-                        </select>
-                    </div>
-                    <div>
-                        <input className={css.smallAlign} placeholder={'Email'} {...register('email')}/>
-                    </div>
 
 
-                </form>
-                <div style={{height: '100px', width: '200px'}}>
-                    <div style={{display: "flex", width: '50px', paddingRight: '5px'}}>
-                        <input style={{width: '20px', height: '20px'}} type={"checkbox"} checked={checked}
-                               onChange={myClients}
-                               placeholder={"mine"}/>My
-                        <img className={spin ? css.spinning : css.reset} onClick={() => {
-                            reset();
-                            //setFilter('')
-                            setSpin(true)
-                            setTimeout(() => {
-                                setSpin(false)
-                            }, 900)
-                            window.history.pushState("", "", "/tables?page=1")
-                            dispatch(paidActions.getAllPaid('?page=1'))
-                        }} src={resetPic} alt={'reset'}/>
-                        <img onClick={getExcel} style={{marginLeft: '10px', width: '30px', cursor: 'pointer'}}
-                             src={excell}
-                             alt={'excell download'}/>
+            <div className={css.mainFather}>
+                <div className={'filters'} style={{
+                    display: "flex",
+                    height: "30px",
+                    width: "100%"
+                }}>
+                    <form className={css.form} onChange={handleSubmit(submit)}>
+                        <div>
+                            <input placeholder={'Id'}   {...register('id')}/>
+                        </div>
+
+                        <div>
+                            <input placeholder={'Name'}   {...register('name')}/>
+
+                        </div>
+
+                        <div>
+                            <input placeholder={'Surname'} {...register('surname')}/>
+                        </div>
+
+                        <div>
+                            <input placeholder={'Phone'}  {...register('phone')}/>
+                        </div>
+
+                        <div>
+                            <select id="Course" placeholder={'fee'} name="Course" {...register('course')}>
+                                <option value="">All Courses</option>
+                                <option value="FS">Full Stack</option>
+                                <option value="FE">Front End</option>
+                                <option value="JSCX">Java Script Complex</option>
+                                <option value="JCX">Java Complex</option>
+                                <option value="PCX">Python Complex</option>
+                                <option value="QACX">QA Complex</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="CourseFormat" name="CourseFormat" {...register('courseFormat')}>
+                                <option value="">all Formats</option>
+                                <option value="static">Static</option>
+                                <option value="online">Online</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="CourseType" name="CourseType" {...register('CourseType')}>
+                                <option value="">All Types</option>
+                                <option value="minimal">Minimal</option>
+                                <option value="pro">Pro</option>
+                                <option value="premium">Premium</option>
+                                <option value="incubator">Incubator</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <input placeholder={'Email'} {...register('email')}/>
+                        </div>
+
+                        <div>
+                            <input type={"date"} {...register('createdAt')} />
+                        </div>
+
+                    </form>
+
+                    <div style={{height: '100px', width: '200px'}}>
+                        <div style={{display: "flex", width: '50px', paddingRight: '5px'}}>
+                            <input style={{width: '20px', height: '20px'}} type={"checkbox"} checked={checked}
+                                   onChange={myClients}
+                                   placeholder={"mine"}/>My
+                            <img className={spin ? css.spinning : css.reset} onClick={() => {
+                                reset();
+                                setSpin(true)
+                                setTimeout(() => {
+                                    setSpin(false)
+                                }, 900)
+                                window.history.pushState("", "", "/tables?page=" + currentPage)
+                                dispatch(paidActions.getAllPaid('?page=1'))
+                            }} src={resetPic} alt={'reset'}/>
+                            <img onClick={getExcel} style={{marginLeft: '10px', width: '30px', cursor: 'pointer'}}
+                                 src={excell}
+                                 alt={'excell download'}/>
+                        </div>
                     </div>
+                </div>
+                <div className={css.ordering}>
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('id') : descendingOrder('id')
+                    }}>Id
+                    </div>
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('name') : descendingOrder('name')
+                    }}>Name
+                    </div>
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('surname') : descendingOrder('surname')
+                    }}>Surname
+                    </div>
+                    <div style={{cursor: 'default'}}>Phone</div>
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('course') : descendingOrder('course')
+                    }}>Course
+                    </div>
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('courseFormat') : descendingOrder('courseFormat')
+                    }}>Course Format
+                    </div>
+
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('courseType') : descendingOrder('courseType')
+                    }}>Course Type
+                    </div>
+
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('email') : descendingOrder('email')
+                    }}>Email
+                    </div>
+
+                    <div onClick={() => {
+                        window.location.href.includes('order=-') ? accendingOrder('createdAt') : descendingOrder('createdAt')
+                    }}>created at
+                    </div>
+
+                    <div style={{cursor: 'default'}}>
+                        Mentor
+                    </div>
+                </div>
+
+                <div>
+                    {loading ?
+                        <div style={{background: "#FBFBFB", width: "100%", display: "flex", justifyContent: "center"}}>
+                            <img src={loadingGif} alt={"loading"}/>
+                        </div> : null}
+
+
+                    {rejected ? <h1 style={{textAlign: 'center', margin: '235.5px'}}>Something went wrong</h1> : null}
+                    {success ?
+                        <DataTable
+                            columns={columns}
+                            responsive={true}
+                            data={paidArr.content}
+                            expandableRows
+                            expandableRowsComponent={ExpandedComponent}
+                            noTableHead={true}
+                        />
+                        : null}
                 </div>
             </div>
-            <div className={css.ordering}>
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('id') : descendingOrder('id')
-                }}>Id
-                </div>
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('name') : descendingOrder('name')
-                }}>Name
-                </div>
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('surname') : descendingOrder('surname')
-                }}>Surname
-                </div>
-                <div style={{cursor: 'default'}}>Phone</div>
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('course') : descendingOrder('course')
-                }}>Course
-                </div>
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('courseFormat') : descendingOrder('courseFormat')
-                }}>Course Format
-                </div>
-
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('courseType') : descendingOrder('courseType')
-                }}>Course Type
-                </div>
-
-                <div onClick={() => {
-                    window.location.href.includes('order=-') ? accendingOrder('email') : descendingOrder('email')
-                }}>Email
-                </div>
-
-                <div style={{cursor: 'default'}}>
-                    Mentor
-                </div>
-            </div>
-
-            <div>
-                {loading ?
-                    <div style={{background: "#FBFBFB", width: "100%", display: "flex", justifyContent: "center"}}>
-                        <img src={loadingGif} alt={"loading"}/>
-                    </div> : null}
 
 
-                {rejected ? <h1 style={{textAlign: 'center', margin: '235.5px'}}>Something went wrong</h1> : null}
-                {success ?
-                    <DataTable
-                        columns={columns}
-                        responsive={true}
-                        data={paidArr.content}
-                        expandableRows
-                        expandableRowsComponent={ExpandedComponent}
-                        noTableHead={true}
-                    />
-                    : null}
-            </div>
 
             <div className={css.black}>
                 <div className={css.editForm}>

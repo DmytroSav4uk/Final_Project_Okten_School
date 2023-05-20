@@ -7,6 +7,11 @@
     height: 60px;
 }
 
+
+.mainFather{
+    width: 100%;
+}
+
 .twoButtons {
     background: slateblue;
     display: flex;
@@ -118,17 +123,33 @@
 }
 
 .form {
+    width: 100%;
     display: flex;
     padding-left: 48px;
 }
+
 
 .form div {
     display: flex;
     justify-content: center;
     width: 120px;
     padding-left: 16px;
-    padding-right: 30px;
+    padding-right: 16px;
 }
+
+
+@media only screen and (min-width: 1920px) {
+    .form {
+        justify-content: space-between;
+        padding: 0;
+    }
+
+    .form div{
+        width: 300px;
+    }
+}
+
+
 
 .form select {
     width: 100%;
@@ -168,6 +189,7 @@
     display: flex;
     width: 100%;
     color: rgba(0, 0, 0, 0.87);
+    /*gap: 10px;*/
     font-size: 12px;
     font-weight: 500;
     -moz-box-align: stretch;
@@ -181,8 +203,8 @@
 .ordering div {
     text-align: left;
     -moz-box-flex: 1;
-    max-width: 100%;
-    min-width: 100px;
+    width: 9.7%;
+
 
     position: relative;
     -moz-box-align: center;
@@ -193,7 +215,7 @@
     display: flex;
     padding-left: 16px;
     padding-right: 16px;
-    width: 170px;
+
     cursor: pointer;
     transition: ease-in-out 0.3s;
     border-radius: 20px 20px 0 0;
@@ -403,4 +425,18 @@
 .statusDiv p {
     margin: 0;
 
+}
+
+.moreBtn{
+    position: relative;
+    top: -50px;
+    right: 10px;
+    color: deepskyblue;
+    font-size: 60px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+.moreBtn:hover{
+    color: #0079a1;
 }
