@@ -143,8 +143,7 @@ const TableComponent = () => {
 
     const submit = (data) => {
 
-        let newData = Object.assign(data, inputPrefill);
-        console.log(newData)
+        let newData = Object.assign(inputPrefill ,data );
 
         for (const key in newData) {
             if (newData.hasOwnProperty(key)) {
@@ -427,7 +426,7 @@ const TableComponent = () => {
                         </div>
 
                         <div>
-                            <input type={"date"} defaultValue={inputPrefill?.createdAt} {...register('createdAt')} />
+                            <input type={"date"} defaultValue={inputPrefill?.startDate} {...register('startDate')} />
                         </div>
 
                     </form>
