@@ -425,8 +425,9 @@ const TableComponent = () => {
                             <input placeholder={'Email'} defaultValue={inputPrefill?.email} {...register('email')}/>
                         </div>
 
-                        <div>
+                        <div style={{marginTop:'-10px',display:"flex" , flexDirection:'column', gap:'5px',height:'fit-content'} }>
                             <input type={"date"} defaultValue={inputPrefill?.startDate} {...register('startDate')} />
+                            <input type={"date"} defaultValue={inputPrefill?.endDate} {...register('endDate')} />
                         </div>
 
                     </form>
