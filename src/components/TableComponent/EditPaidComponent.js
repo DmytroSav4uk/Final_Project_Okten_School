@@ -155,7 +155,7 @@ const EditPaidComponent = ({preloadedValues}) => {
                         <div>
                             <p>Phone</p>
                             <Controller control={control}
-                                        defaultValue={preloadedValues?.phone ? preloadedValues?.phone : '380'}
+                                        defaultValue={preloadedValues?.phone ? preloadedValues?.phone : null}
                                         name={'phone'} render={
                                 ({field: {ref, ...field}}) => (
                                     <PhoneInput
@@ -182,7 +182,7 @@ const EditPaidComponent = ({preloadedValues}) => {
                                             border: 'none',
                                             padding: '0',
                                             minWidth: '219px'
-                                        }} country={'ua'}  {...field}/>
+                                        }}   {...field}/>
                                 )}/>
                         </div>
                         <div>
