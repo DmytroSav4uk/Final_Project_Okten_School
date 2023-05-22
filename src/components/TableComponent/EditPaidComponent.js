@@ -73,7 +73,7 @@ const EditPaidComponent = ({preloadedValues}) => {
 
 
                             {showAddGroup ? <input placeholder={'group'} name={'group'} {...register('group')}/>
-                                : <select value={preloadedValues?.group?.name}
+                                : <select defaultValue={preloadedValues?.group?.name}
                                           style={{
                                               width: '219.33px',
                                               height: "29.5px",
