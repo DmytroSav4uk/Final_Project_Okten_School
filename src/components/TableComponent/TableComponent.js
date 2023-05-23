@@ -150,15 +150,16 @@ const TableComponent = () => {
         const newData = { ...inputPrefill };
 
         for (const key in data) {
-            if (data.hasOwnProperty(key) && data[key] !== null && data[key] !== undefined) {
-                newData[key] = data[key]  ;
+            if (data.hasOwnProperty(key) && data[key] !== '') {
+                newData[key] = data[key];
             }
         }
 
-        for (const key in data) {
+        console.log(newData)
+        for (const key in newData) {
             if (newData.hasOwnProperty(key)) {
                 if (newData[key] !== "" && key !=="?page" && key !=="order") {
-                    urlSearchParams.append(`${key}`, `${newData[key]}`);
+                    urlSearchParams.append(`${key}`, `${(decodeURIComponent(newData[key]))}`);
                 }
             }
         }
