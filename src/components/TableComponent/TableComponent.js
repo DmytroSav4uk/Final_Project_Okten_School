@@ -114,6 +114,10 @@ const TableComponent = () => {
             setChecked(true)
         }
 
+        if (search.includes('&=undefined')) {
+            window.history.pushState(null, null, search.replace("&=undefined", ''));
+        }
+
         if (!isExpired) {
             window.history.pushState(null, null, window.location.href);
             window.onpopstate = function () {
@@ -143,9 +147,15 @@ const TableComponent = () => {
 
     const submit = (data) => {
 
-        let newData = Object.assign(inputPrefill ,data );
+        const newData = { ...inputPrefill };
 
-        for (const key in newData) {
+        for (const key in data) {
+            if (data.hasOwnProperty(key) && data[key] !== '') {
+                newData[key] = data[key];
+            }
+        }
+
+        for (const key in data) {
             if (newData.hasOwnProperty(key)) {
                 if (newData[key] !== "" && key !=="?page" && key !=="order") {
                     urlSearchParams.append(`${key}`, `${newData[key]}`);
@@ -369,6 +379,8 @@ const TableComponent = () => {
                     height: "30px",
                     width: "100%"
                 }}>
+                    {/*//****************************************/}
+
                     <form className={css.form} onChange={handleSubmit(submit)}>
                         <div>
                             <input defaultValue={inputPrefill?.id} placeholder={'Id'}   {...register('id')}/>
@@ -390,7 +402,7 @@ const TableComponent = () => {
 
                         <div>
                             <select id="Course" placeholder={'fee'} name="course"
-                                    value={inputPrefill?.course} {...register('course')}>
+                                    defaultValue={inputPrefill?.course} {...register('course')}>
                                 <option value="">All Courses</option>
                                 <option value="FS">
                                     Full Stack
@@ -404,7 +416,7 @@ const TableComponent = () => {
                         </div>
                         <div>
                             <select id="CourseFormat" name="courseFormat"
-                                    value={inputPrefill?.courseFormat} {...register('courseFormat')}>
+                                    defaultValue={inputPrefill?.courseFormat} {...register('courseFormat')}>
                                 <option value="">all Formats</option>
                                 <option value="static">Static</option>
                                 <option value="online">Online</option>
@@ -429,6 +441,9 @@ const TableComponent = () => {
                             <input type={"date"} defaultValue={inputPrefill?.startDate} {...register('startDate')} />
                             <input type={"date"} defaultValue={inputPrefill?.endDate} {...register('endDate')} />
                         </div>
+
+
+                        {/*//****************************************/}
 
                     </form>
 
