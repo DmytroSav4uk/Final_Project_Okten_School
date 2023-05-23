@@ -150,8 +150,8 @@ const TableComponent = () => {
         const newData = { ...inputPrefill };
 
         for (const key in data) {
-            if (data.hasOwnProperty(key) && data[key] !== '') {
-                newData[key] = data[key];
+            if (data.hasOwnProperty(key) && data[key] !== null && data[key] !== undefined) {
+                newData[key] = data[key]  ;
             }
         }
 
@@ -383,26 +383,26 @@ const TableComponent = () => {
 
                     <form className={css.form} onChange={handleSubmit(submit)}>
                         <div>
-                            <input defaultValue={inputPrefill?.id} placeholder={'Id'}   {...register('id')}/>
+                            <input defaultValue={ inputPrefill?.id} placeholder={'Id'}   {...register('id')}/>
                         </div>
 
                         <div>
-                            <input defaultValue={inputPrefill?.name} placeholder={'Name'}   {...register('name')}/>
+                            <input defaultValue={inputPrefill?.name && decodeURIComponent(inputPrefill?.name) } placeholder={'Name'}   {...register('name')}/>
 
                         </div>
 
                         <div>
-                            <input defaultValue={inputPrefill?.surname}
+                            <input defaultValue={inputPrefill?.surname && decodeURIComponent(inputPrefill?.surname) }
                                    placeholder={'Surname'} {...register('surname')}/>
                         </div>
 
                         <div>
-                            <input placeholder={'Phone'} value={inputPrefill?.phone}  {...register('phone')}/>
+                            <input placeholder={'Phone'} defaultValue={inputPrefill?.phone}  {...register('phone')}/>
                         </div>
 
                         <div>
                             <select id="Course" placeholder={'fee'} name="course"
-                                    defaultValue={inputPrefill?.course} {...register('course')}>
+                                    value={inputPrefill?.course || ''} {...register('course')}>
                                 <option value="">All Courses</option>
                                 <option value="FS">
                                     Full Stack
@@ -416,7 +416,7 @@ const TableComponent = () => {
                         </div>
                         <div>
                             <select id="CourseFormat" name="courseFormat"
-                                    defaultValue={inputPrefill?.courseFormat} {...register('courseFormat')}>
+                                    value={inputPrefill?.courseFormat || ''} {...register('courseFormat')}>
                                 <option value="">all Formats</option>
                                 <option value="static">Static</option>
                                 <option value="online">Online</option>
@@ -424,7 +424,7 @@ const TableComponent = () => {
                         </div>
                         <div>
                             <select id="CourseType" name="courseType"
-                                    defaultValue={inputPrefill?.courseType} {...register('courseType')}>
+                                    value={inputPrefill?.courseType || ''} {...register('courseType')}>
                                 <option value="">All Types</option>
                                 <option value="minimal">Minimal</option>
                                 <option value="pro">Pro</option>
@@ -434,7 +434,7 @@ const TableComponent = () => {
                         </div>
 
                         <div>
-                            <input placeholder={'Email'} defaultValue={inputPrefill?.email} {...register('email')}/>
+                            <input placeholder={'Email'} defaultValue={inputPrefill?.email } {...register('email')}/>
                         </div>
 
                         <div style={{marginTop:'-10px',display:"flex" , flexDirection:'column', gap:'5px',height:'fit-content'} }>
