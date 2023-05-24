@@ -126,7 +126,7 @@ const TableComponent = () => {
         } else {
             navigate('/getStarted')
         }
-        /* eslint-disable */
+
     }, [currentPage, dispatch, search, isExpired, navigate, idArr]);
 
 
@@ -147,19 +147,10 @@ const TableComponent = () => {
 
     const submit = (data) => {
 
-        const newData = { ...inputPrefill };
-
         for (const key in data) {
-            if (data.hasOwnProperty(key) && data[key] !== '') {
-                newData[key] = data[key];
-            }
-        }
-
-        console.log(newData)
-        for (const key in newData) {
-            if (newData.hasOwnProperty(key)) {
-                if (newData[key] !== "" && key !=="?page" && key !=="order") {
-                    urlSearchParams.append(`${key}`, `${(decodeURIComponent(newData[key]))}`);
+            if (data.hasOwnProperty(key)) {
+                if (data[key] !== "" && key !== "?page" && key !== "order") {
+                    urlSearchParams.append(`${key}`, `${(decodeURIComponent(data[key]))}`);
                 }
             }
         }
@@ -384,16 +375,17 @@ const TableComponent = () => {
 
                     <form className={css.form} onChange={handleSubmit(submit)}>
                         <div>
-                            <input defaultValue={ inputPrefill?.id} placeholder={'Id'}   {...register('id')}/>
+                            <input defaultValue={inputPrefill?.id} placeholder={'Id'}   {...register('id')}/>
                         </div>
 
                         <div>
-                            <input defaultValue={inputPrefill?.name && decodeURIComponent(inputPrefill?.name) } placeholder={'Name'}   {...register('name')}/>
+                            <input defaultValue={inputPrefill?.name && decodeURIComponent(inputPrefill?.name)}
+                                   placeholder={'Name'}   {...register('name')}/>
 
                         </div>
 
                         <div>
-                            <input defaultValue={inputPrefill?.surname && decodeURIComponent(inputPrefill?.surname) }
+                            <input defaultValue={inputPrefill?.surname && decodeURIComponent(inputPrefill?.surname)}
                                    placeholder={'Surname'} {...register('surname')}/>
                         </div>
 
@@ -435,10 +427,16 @@ const TableComponent = () => {
                         </div>
 
                         <div>
-                            <input placeholder={'Email'} defaultValue={inputPrefill?.email } {...register('email')}/>
+                            <input placeholder={'Email'} defaultValue={inputPrefill?.email} {...register('email')}/>
                         </div>
 
-                        <div style={{marginTop:'-10px',display:"flex" , flexDirection:'column', gap:'5px',height:'fit-content'} }>
+                        <div style={{
+                            marginTop: '-10px',
+                            display: "flex",
+                            flexDirection: 'column',
+                            gap: '5px',
+                            height: 'fit-content'
+                        }}>
                             <input type={"date"} defaultValue={inputPrefill?.startDate} {...register('startDate')} />
                             <input type={"date"} defaultValue={inputPrefill?.endDate} {...register('endDate')} />
                         </div>
@@ -460,7 +458,8 @@ const TableComponent = () => {
                                     setSpin(false)
                                 }, 900)
                                 window.history.pushState("", "", "/tables?page=" + currentPage)
-                                dispatch(paidActions.getAllPaid('?page=1'))
+                                setInputPrefill({})
+                                dispatch(paidActions.getAllPaid('?page=' + currentPage))
                             }} src={resetPic} alt={'reset'}/>
                             <img onClick={getExcel} style={{marginLeft: '10px', width: '30px', cursor: 'pointer'}}
                                  src={excell}
